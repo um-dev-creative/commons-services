@@ -14,7 +14,7 @@ IMPORTANTE CONSIDERAR:
     <groupId>com.prx</groupId>
     <artifactId>commons-services</artifactId>
     <name>PRX Commons Services components</name>
-    <version>1.0.2</version>
+    <version>0.0.1</version>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
