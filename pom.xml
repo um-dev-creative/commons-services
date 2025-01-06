@@ -64,7 +64,7 @@ IMPORTANTE CONSIDERAR:
         <mockserver.junit.jupiter.version>5.15.0</mockserver.junit.jupiter.version>
         <mockito.version>5.14.2</mockito.version>
         <!--        Coverage and Sonar-->
-        <sonar.organization>prx-open</sonar.organization>
+        <sonar.organization>prx-dev</sonar.organization>
         <sonar.coverage.exclusions>**/*.xml,**/*Application.*,**/config/*,**/loggers/*,
             **/loggers/interceptor/*,**/mapper/*</sonar.coverage.exclusions>
         <sonar.exclusions>**/*.xml,**/*Application.*,**/config/*,**/mapper/*</sonar.exclusions>
