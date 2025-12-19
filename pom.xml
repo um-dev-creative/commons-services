@@ -69,8 +69,8 @@ IMPORTANTE CONSIDERAR:
         <sonar.organization>prx-dev</sonar.organization>
         <sonar.projectKey>prx-dev_commons-services</sonar.projectKey>
         <sonar.projectName>prx-dev_commons-services</sonar.projectName>
-        <sonar.coverage.exclusions>**/*.xml,**/*Application.*,**/config/*,**/loggers/*,**/loggers/interceptor/*,**/mapper/*</sonar.coverage.exclusions>
-        <sonar.exclusions>**/*.xml,**/*Application.*,**/config/*,**/mapper/*,**/*.java</sonar.exclusions>
+        <sonar.coverage.exclusions>**/*.xml,**/*Application.*,**/*Test.*</sonar.coverage.exclusions>
+        <sonar.exclusions>**/*.xml,**/*Application.*,**/*Test.*,**/*.java</sonar.exclusions>
         <project.ruleset>${project.basedir}/ruleset.xml</project.ruleset>
     </properties>
 
