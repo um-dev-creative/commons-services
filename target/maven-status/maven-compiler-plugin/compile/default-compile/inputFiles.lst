@@ -1,0 +1,11 @@
+/home/runner/work/commons-services/commons-services/src/main/java/com/prx/commons/services/CrudService.java
+/home/runner/work/commons-services/commons-services/src/main/java/com/prx/commons/services/config/mapper/JacksonConfig.java
+/home/runner/work/commons-services/commons-services/src/main/java/com/prx/commons/services/config/mapper/MapperAppConfig.java
+/home/runner/work/commons-services/commons-services/src/main/java/com/prx/commons/services/loggers/LoggingService.java
+/home/runner/work/commons-services/commons-services/src/main/java/com/prx/commons/services/loggers/LoggingServiceImp.java
+/home/runner/work/commons-services/commons-services/src/main/java/com/prx/commons/services/loggers/config/LoggerWebConfigurer.java
+/home/runner/work/commons-services/commons-services/src/main/java/com/prx/commons/services/loggers/interceptor/LogInterceptor.java
+/home/runner/work/commons-services/commons-services/src/main/java/com/prx/commons/services/loggers/interceptor/RequestBodyInterceptor.java
+/home/runner/work/commons-services/commons-services/src/main/java/com/prx/commons/services/loggers/interceptor/ResponseBodyInterceptor.java
+/home/runner/work/commons-services/commons-services/src/main/java/com/prx/commons/services/properties/DiscoveryClientProperties.java
+/home/runner/work/commons-services/commons-services/src/main/java/com/prx/commons/services/rest/ClientRestTemplate.java

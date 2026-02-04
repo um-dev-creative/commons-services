@@ -1,0 +1,6 @@
+/home/runner/work/commons-services/commons-services/src/test/java/com/prx/commons/services/CrudServiceTest.java
+/home/runner/work/commons-services/commons-services/src/test/java/com/prx/commons/services/config/mapper/JacksonConfigTest.java
+/home/runner/work/commons-services/commons-services/src/test/java/com/prx/commons/services/loggers/LoggingServiceImpTest.java
+/home/runner/work/commons-services/commons-services/src/test/java/com/prx/commons/services/loggers/LoggingServiceTest.java
+/home/runner/work/commons-services/commons-services/src/test/java/com/prx/commons/services/properties/DiscoveryClientPropertiesTest.java
+/home/runner/work/commons-services/commons-services/src/test/java/com/prx/commons/services/rest/ClientRestTemplateTest.java

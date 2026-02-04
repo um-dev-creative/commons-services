@@ -1,0 +1,37 @@
+{
+  "groups": [
+    {
+      "name": "security.discovery.client",
+      "type": "com.prx.commons.services.properties.DiscoveryClientProperties",
+      "sourceType": "com.prx.commons.services.properties.DiscoveryClientProperties"
+    }
+  ],
+  "properties": [
+    {
+      "name": "security.discovery.client.max-connections-per-host",
+      "type": "java.lang.Integer",
+      "sourceType": "com.prx.commons.services.properties.DiscoveryClientProperties"
+    },
+    {
+      "name": "security.discovery.client.max-total-connections",
+      "type": "java.lang.Integer",
+      "sourceType": "com.prx.commons.services.properties.DiscoveryClientProperties"
+    },
+    {
+      "name": "security.discovery.client.name",
+      "type": "java.lang.String",
+      "sourceType": "com.prx.commons.services.properties.DiscoveryClientProperties"
+    },
+    {
+      "name": "security.discovery.client.trust-store-file",
+      "type": "java.lang.String",
+      "sourceType": "com.prx.commons.services.properties.DiscoveryClientProperties"
+    },
+    {
+      "name": "security.discovery.client.trust-store-password",
+      "type": "java.lang.String",
+      "sourceType": "com.prx.commons.services.properties.DiscoveryClientProperties"
+    }
+  ],
+  "hints": []
+}
