@@ -16,21 +16,28 @@ package com.prx.commons.services.loggers;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-/// LoggingService.
-///
-/// @author Luis Antonio Mata
-/// @version 0.0.1
-/// @since 21
+/**
+ * Logging service contract for logging HTTP requests and responses.
+ * Implementations may log request and response details depending on configuration.
+ *
+ * @since 21
+ */
 public interface LoggingService {
 
-    ///  Display the request.
-    /// @param httpServletRequest the httpServletRequest
-    /// @param body the body
+    /**
+     * Display the HTTP request information.
+     *
+     * @param httpServletRequest the HTTP servlet request
+     * @param body               the request body (may be null)
+     */
     void displayRequest(HttpServletRequest httpServletRequest, Object body);
 
-    ///  Display the response.
-    /// @param httpServletRequest the httpServletRequest
-    /// @param httpServletResponse the httpServletResponse
-    /// @param body the body
+    /**
+     * Display the HTTP response information.
+     *
+     * @param httpServletRequest  the HTTP servlet request
+     * @param httpServletResponse the HTTP servlet response
+     * @param body                the response body (may be null)
+     */
     void displayResponse(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object body);
 }
