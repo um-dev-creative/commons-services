@@ -21,28 +21,30 @@ import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
-/// InterceptorLog.
-///
-/// @author Luis Antonio Mata
-/// @version 0.0.1
-/// @since 21
+/**
+ * Handler interceptor that logs incoming HTTP requests for supported HTTP methods.
+ * It delegates request logging to the configured {@link LoggingService}.
+ */
 @Component
 public class LogInterceptor implements HandlerInterceptor {
 
     private final LoggingService loggingService;
 
-    ///  Constructor.
+    /**
+     * Constructs a new LogInterceptor.
+     *
+     * @param loggingService the logging service used to record request information
+     */
     public LogInterceptor(LoggingService loggingService) {
         this.loggingService = loggingService;
     }
 
-    ///  PreHandle. Method that is executed before the request is processed.
-    /// @param request HttpServletRequest
-    /// @param response HttpServletResponse
-    /// @param handler Object
-    /// @return boolean
-    /// @throws Exception Exception
-    /// @since 21
+    /**
+     * Pre-handle logic executed before controller invocation. For GET, POST, DELETE and PUT
+     * methods the interceptor will call {@link LoggingService#displayRequest}.
+     *
+     * @return true to continue processing the request
+     */
     @Override
     public boolean preHandle(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull Object handler) throws Exception {
         if (request.getMethod().equals(HttpMethod.GET.name())

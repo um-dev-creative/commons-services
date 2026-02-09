@@ -26,25 +26,31 @@ import java.util.List;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
-/// Template rest client for services.
-///
-/// @author <a href="mailto:luis.antonio.mata@gmail.com">Luis Mata</a>
-/// @version 0.0.1
-/// @since 21
+/**
+ * RestTemplate wrapper that configures a {@link RestTemplate} with a provided
+ * {@link MappingJackson2HttpMessageConverter} and default settings (buffering, message converters).
+ *
+ * @since 21
+ * @version 0.0.1
+ */
 public class ClientRestTemplate {
 
     protected final MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter;
     protected RestTemplate restTemplate;
 
-    /// Constructor.
-    ///
-    /// @param mappingJackson2HttpMessageConverter the message converter
+    /**
+     * Constructs the client with the provided Jackson message converter and initializes the RestTemplate.
+     *
+     * @param mappingJackson2HttpMessageConverter the Jackson message converter to use
+     */
     public ClientRestTemplate(MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter) {
         this.mappingJackson2HttpMessageConverter = mappingJackson2HttpMessageConverter;
         init();
     }
 
-    /// Properties initialization.
+    /**
+     * Initialize the RestTemplate with default interceptors and message converters.
+     */
     protected final void init() {
         List<MediaType> supportedMediaTypes = new ArrayList<>();
         supportedMediaTypes.add(APPLICATION_JSON);

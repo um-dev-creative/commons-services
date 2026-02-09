@@ -23,11 +23,9 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestBodyAdviceAd
 
 import java.lang.reflect.Type;
 
-/// RequestBodyInterceptor. Intercepts the request body and logs it.
-///
-/// @author Luis Antonio Mata
-/// @version 0.0.1
-/// @since 21
+/**
+ * Intercepts request bodies and logs them using the provided {@link LoggingService}.
+ */
 @ControllerAdvice
 public class RequestBodyInterceptor extends RequestBodyAdviceAdapter {
 
@@ -35,23 +33,21 @@ public class RequestBodyInterceptor extends RequestBodyAdviceAdapter {
 
     private final HttpServletRequest request;
 
-    ///  Constructor. Initializes the logging service and the request.
-    /// @param loggingService the logging service
-    /// @param request the request
+    /**
+     * Creates a new RequestBodyInterceptor.
+     *
+     * @param loggingService the logging service used to log the request body
+     * @param request        the current HTTP servlet request
+     */
     public RequestBodyInterceptor(LoggingService loggingService, HttpServletRequest request) {
         super();
         this.loggingService = loggingService;
         this.request = request;
     }
 
-    ///  Intercepts the request body and logs it.
-    /// @param body the body
-    /// @param inputMessage the input message
-    /// @param parameter the method parameter
-    /// @param targetType the target type
-    /// @param converterType the converter type
-    /// @return the body
-    /// @see RequestBodyAdviceAdapter#afterBodyRead(Object, HttpInputMessage, MethodParameter, Type, Class)
+    /**
+     * Called after the request body is read. Delegates logging to {@link LoggingService#displayRequest}.
+     */
     @Override
     public Object afterBodyRead(Object body, HttpInputMessage inputMessage, MethodParameter parameter, Type targetType,
                                 Class<? extends HttpMessageConverter<?>> converterType) {
@@ -59,12 +55,9 @@ public class RequestBodyInterceptor extends RequestBodyAdviceAdapter {
         return super.afterBodyRead(body, inputMessage, parameter, targetType, converterType);
     }
 
-    ///  Supports. Always returns true.
-    /// @param methodParameter the method parameter
-    /// @param type the type
-    /// @param aClass the class
-    /// @return true
-    /// @see RequestBodyAdviceAdapter#supports(MethodParameter, Type, Class)
+    /**
+     * Supports all controller methods.
+     */
     @Override
     public boolean supports(MethodParameter methodParameter, Type type, Class<? extends HttpMessageConverter<?>> aClass) {
         return true;

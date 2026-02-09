@@ -24,43 +24,34 @@ import org.springframework.http.server.ServletServerHttpResponse;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
-/// ResponseBodyInterceptor. Intercepts the response body and logs it.
-///
-/// @author Luis Antonio Mata
-/// @version 0.0.1
-/// @since 21
+/**
+ * Intercepts controller responses and logs response details using {@link LoggingService}.
+ */
 @ControllerAdvice
 public class ResponseBodyInterceptor implements ResponseBodyAdvice<Object> {
     private final LoggingService loggingService;
 
-    /// Default constructor.
-    /// @param loggingService the logging service
-    /// @since 21
+    /**
+     * Constructs a new ResponseBodyInterceptor.
+     *
+     * @param loggingService the logging service used to record response information
+     */
     public ResponseBodyInterceptor(LoggingService loggingService) {
         this.loggingService = loggingService;
     }
 
-    /// Supports. Always returns true.
-    /// @param methodParameter the method parameter
-    /// @param aClass the class
-    /// @return true
-    /// @since 21
-    /// @see ResponseBodyAdvice#supports(MethodParameter, Class)
+    /**
+     * Supports all response types.
+     */
     @Override
     public boolean supports(MethodParameter methodParameter, Class<? extends HttpMessageConverter<?>> aClass) {
         return true;
     }
 
-    /// Before body write. Logs the response.
-    /// @param body the body
-    /// @param methodParameter the method parameter
-    /// @param mediaType the media type
-    /// @param aClass the class
-    /// @param serverHttpRequest the server http request
-    /// @param serverHttpResponse the server http response
-    /// @return the body
-    /// @since 21
-    /// @see ResponseBodyAdvice#beforeBodyWrite(Object, MethodParameter, MediaType, Class, ServerHttpRequest, ServerHttpResponse)
+    /**
+     * Called before the body is written to the response. It delegates logging to
+     * {@link LoggingService#displayResponse}.
+     */
     @Override
     public Object beforeBodyWrite(Object body, MethodParameter methodParameter, MediaType mediaType,
                                   Class<? extends HttpMessageConverter<?>> aClass, ServerHttpRequest serverHttpRequest,

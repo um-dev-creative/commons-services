@@ -17,11 +17,12 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-/// LoggerWebConfigurer.
-///
-/// @author Luis Antonio Mata
-/// @version 0.0.1
-/// @since 21
+/**
+ * Web MVC configuration that registers the logging interceptor for incoming requests.
+ *
+ * @since 21
+ * @version 0.0.1
+ */
 @Configuration
 public class LoggerWebConfigurer implements WebMvcConfigurer {
 
