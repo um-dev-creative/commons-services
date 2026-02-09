@@ -51,7 +51,7 @@ IMPORTANTE CONSIDERAR:
         <repsy.account.user>${env.REPSY_ACCOUNT_USER}</repsy.account.user>
         <repsy.account.password>${env.REPSY_ACCOUNT_PASSWORD}</repsy.account.password>
         <!--        SPRING -->
-        <spring-core.version>6.2.1</spring-core.version>
+        <spring-core.version>6.2.7</spring-core.version>
         <spring-boot.version>3.4.1</spring-boot.version>
         <spring-cloud.version>2024.0.0</spring-cloud.version>
         <mapstruct.version>1.5.5.Final</mapstruct.version>
