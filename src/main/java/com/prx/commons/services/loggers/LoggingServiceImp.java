@@ -26,11 +26,13 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
-/// Implementation of the LoggingService interface.
-/// Provides methods to log HTTP requests and responses.
-///
-/// @version 0.0.1
-/// @since 21
+/**
+ * Implementation of the {@link LoggingService} interface.
+ * Provides methods to log HTTP requests and responses when trace logging is enabled.
+ *
+ * @version 0.0.1
+ * @since 21
+ */
 @Service
 public class LoggingServiceImp implements LoggingService {
 
@@ -39,15 +41,20 @@ public class LoggingServiceImp implements LoggingService {
 
     private static final Logger logger = LoggerFactory.getLogger(LoggingServiceImp.class);
 
-    /// Default constructor
+    /**
+     * Default constructor.
+     */
     public LoggingServiceImp() {
         // Default constructor
     }
 
-    /// Logs the request.
-    ///
-    /// @param request The HTTP request.
-    /// @param body The request body.
+    /**
+     * Logs the HTTP request when trace is enabled. The log message includes HTTP method,
+     * request URI, parameters (if any) and body (if not null).
+     *
+     * @param request the HTTP servlet request
+     * @param body    the request body (may be null)
+     */
     @Override
     public void displayRequest(HttpServletRequest request, Object body) {
         if(isTraceEnabled) {
@@ -68,6 +75,14 @@ public class LoggingServiceImp implements LoggingService {
         }
     }
 
+    /**
+     * Logs the HTTP response when trace is enabled. The log message includes HTTP method,
+     * response headers (if any) and response body.
+     *
+     * @param request  the HTTP servlet request
+     * @param response the HTTP servlet response
+     * @param body     the response body (may be null)
+     */
     @Override
     public void displayResponse(HttpServletRequest request, HttpServletResponse response, Object body) {
         if(isTraceEnabled) {

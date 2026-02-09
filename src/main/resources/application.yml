@@ -1,4 +1,4 @@
 prx:
   logging:
     trace:
-      enabled: ${LOGGING_TRACE_ENABLE}
+      enabled: ${LOGGING_TRACE_ENABLED}

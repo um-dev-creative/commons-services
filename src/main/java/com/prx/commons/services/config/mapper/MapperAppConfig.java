@@ -5,16 +5,18 @@ import org.mapstruct.MappingConstants;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.ReportingPolicy;
 
-/// Configuration interface for MapStruct mappers.
-/// This interface configures the MapStruct mappers with specific settings.
+/**
+ * MapStruct base configuration for project mappers.
+ * Configures mappers to be Spring components and defines mapping behavior for nulls and unmapped properties.
+ */
 @MapperConfig(
         // Specifies that the mapper should be a Spring bean.
         componentModel = MappingConstants.ComponentModel.SPRING,
-        // Specifies that properties with null values should not be mapped.
+        // Specifies how to handle null properties when mapping.
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.SET_TO_NULL,
-        // Specifies that the mapper should fail if there are any unmapped properties.
+        // Ignore unmapped source properties.
         unmappedSourcePolicy = ReportingPolicy.IGNORE,
-        // Specifies that the mapper should fail if there are any unmapped properties.
+        // Ignore unmapped target properties.
         unmappedTargetPolicy = ReportingPolicy.IGNORE
 )
 public interface MapperAppConfig {

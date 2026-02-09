@@ -16,10 +16,13 @@ package com.prx.commons.services.properties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
-/// DiscoveryClientProperties.
-///
-/// @author <a href='mailto:luis.antonio.mata@gmail.com'>Luis Antonio Mata.</a>
-/// @version 0.0.1
+/**
+ * Configuration properties for discovery client (Eureka/Discovery).
+ * Binds properties under the prefix {@code security.discovery.client}.
+ *
+ * @author <a href='mailto:luis.antonio.mata@gmail.com'>Luis Antonio Mata</a>
+ * @version 0.0.1
+ */
 @Component
 @ConfigurationProperties(prefix = "security.discovery.client")
 public class DiscoveryClientProperties {
@@ -30,67 +33,99 @@ public class DiscoveryClientProperties {
     private Integer maxTotalConnections;
     private Integer maxConnectionsPerHost;
 
-    /// Default constructor.
+    /**
+     * Default constructor.
+     */
     public DiscoveryClientProperties() {
         //Default constructor.
     }
 
-    ///  Return the name of the client.
-    ///  @return the name of the client
+    /**
+     * Returns the configured client name.
+     *
+     * @return the client name
+     */
     public String getName() {
         return name;
     }
 
-    ///  Set the name of the client.
-    /// @param name the name of the client
+    /**
+     * Sets the client name.
+     *
+     * @param name the client name
+     */
     public void setName(String name) {
         this.name = name;
     }
 
-    ///  Return the trust store file.
-    /// @return the trust store file
+    /**
+     * Returns the trust store file path.
+     *
+     * @return the trust store file
+     */
     public String getTrustStoreFile() {
         return trustStoreFile;
     }
 
-    ///  Set the trust store file.
-    /// @param trustStoreFile the trust store file
+    /**
+     * Sets the trust store file path.
+     *
+     * @param trustStoreFile the trust store file
+     */
     public void setTrustStoreFile(String trustStoreFile) {
         this.trustStoreFile = trustStoreFile;
     }
 
-    ///  Return the trust store password.
-    /// @return the trust store password
+    /**
+     * Returns the trust store password.
+     *
+     * @return the trust store password
+     */
     public String getTrustStorePassword() {
         return trustStorePassword;
     }
 
-    ///  Set the trust store password.
-    /// @param trustStorePassword the trust store password
+    /**
+     * Sets the trust store password.
+     *
+     * @param trustStorePassword the trust store password
+     */
     public void setTrustStorePassword(String trustStorePassword) {
         this.trustStorePassword = trustStorePassword;
     }
 
-    ///  Return the maximum total connections.
-    /// @return the maximum total connections
+    /**
+     * Returns the maximum number of total connections.
+     *
+     * @return the maximum total connections
+     */
     public Integer getMaxTotalConnections() {
         return maxTotalConnections;
     }
 
-    ///  Set the maximum total connections.
-    /// @param maxTotalConnections the maximum total connections
+    /**
+     * Sets the maximum number of total connections.
+     *
+     * @param maxTotalConnections the maximum total connections
+     */
     public void setMaxTotalConnections(Integer maxTotalConnections) {
         this.maxTotalConnections = maxTotalConnections;
     }
 
-    ///  Return the maximum connections per host.
-    /// @return the maximum connections per host
+    /**
+     * Returns the maximum number of connections per host.
+     *
+     * @return the maximum connections per host
+     */
     public Integer getMaxConnectionsPerHost() {
         return maxConnectionsPerHost;
     }
 
-    ///  Set the maximum connections per host.
-    /// @param maxConnectionsPerHost the maximum connections per host
+    /**
+     * Sets the maximum number of connections per host.
+     *
+     * @param maxConnectionsPerHost the maximum connections per host
+     */
     public void setMaxConnectionsPerHost(Integer maxConnectionsPerHost) {
         this.maxConnectionsPerHost = maxConnectionsPerHost;
     }
