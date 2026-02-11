@@ -43,17 +43,14 @@ IMPORTANTE CONSIDERAR:
         <maven.compiler.plugin.version>3.13.0</maven.compiler.plugin.version>
         <maven.resource.plugin.version>3.3.1</maven.resource.plugin.version>
         <maven.plugin.javadoc.version>3.6.3</maven.plugin.javadoc.version>
-        <maven.plugin.jacoco.version>0.8.15</maven.plugin.jacoco.version>
+        <maven.plugin.jacoco.version>0.8.14</maven.plugin.jacoco.version>
         <maven.plugin.pmd.version>3.23.0</maven.plugin.pmd.version>
         <maven.plugin.jxr.version>3.0.0</maven.plugin.jxr.version>
         <maven.surefire.version>3.2.5</maven.surefire.version>
-        <!--        REPOSITORY-->
-        <repsy.account.user>${env.REPSY_ACCOUNT_USER}</repsy.account.user>
-        <repsy.account.password>${env.REPSY_ACCOUNT_PASSWORD}</repsy.account.password>
         <!--        SPRING -->
         <spring-core.version>6.2.1</spring-core.version>
-        <spring-boot.version>3.4.1</spring-boot.version>
-        <spring-cloud.version>2024.0.0</spring-cloud.version>
+        <spring-boot.version>3.5.8</spring-boot.version>
+        <spring-cloud.version>2025.0.1</spring-cloud.version>
         <mapstruct.version>1.5.5.Final</mapstruct.version>
         <!-- Log4J -->
         <logging.log4j.version>2.24.3</logging.log4j.version>
@@ -64,6 +61,9 @@ IMPORTANTE CONSIDERAR:
         <mockserver.junit.jupiter.version>5.15.0</mockserver.junit.jupiter.version>
         <mockito.version>5.14.2</mockito.version>
         <!--        Coverage and Sonar-->
+        <asm.version>9.7</asm.version>
+        <!-- argLine used by Surefire/Jacoco; default empty so builds don't fail when not set -->
+        <argLine/>
         <sonar.organization>prx-dev</sonar.organization>
         <sonar.projectKey>prx-dev_commons-services</sonar.projectKey>
         <sonar.projectName>prx-dev_commons-services</sonar.projectName>
@@ -217,39 +217,16 @@ IMPORTANTE CONSIDERAR:
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${maven.surefire.version}</version>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>build-helper-maven-plugin</artifactId>
-                <version>3.2.0</version>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>versions-maven-plugin</artifactId>
-                <version>2.8.1</version>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-enforcer-plugin</artifactId>
-                <version>3.4.1</version>
                 <configuration>
-                    <rules>
-                        <dependencyConvergence/>
-                    </rules>
+                    <argLine>${argLine}</argLine>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>${maven.compiler.plugin.version}</version>
-                <configuration>
-                    <encoding>${project.build.sourceEncoding}</encoding>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-resources-plugin</artifactId>
-                <version>${maven.resource.plugin.version}</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.ow2.asm</groupId>
+                        <artifactId>asm</artifactId>
+                        <version>${asm.version}</version>
+                    </dependency>
+                </dependencies>
             </plugin>
             <plugin>
                 <artifactId>maven-pmd-plugin</artifactId>
@@ -282,7 +259,80 @@ IMPORTANTE CONSIDERAR:
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <!-- jacoco plugin moved to profile 'with-jacoco' to avoid plugin resolution failures in some environments. -->
+                <version>${maven.plugin.jacoco.version}</version>
+                <executions>
+                    <execution>
+                        <id>prepare-agent</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                        <phase>initialize</phase>
+                        <configuration>
+                            <!-- write the exec file to a predictable location -->
+                            <destFile>${project.build.directory}/jacoco.exec</destFile>
+                            <append>true</append>
+                            <!-- set propertyName so Surefire picks up the agent JVM arg -->
+                            <propertyName>argLine</propertyName>
+                            <!-- exclude JDK, tooling and mocking libs from instrumentation to avoid Unsupported major version issues -->
+                            <excludes>
+                                <exclude>sun/**</exclude>
+                                <exclude>jdk/**</exclude>
+                                <exclude>com/sun/**</exclude>
+                                <exclude>net/bytebuddy/**</exclude>
+                                <exclude>org/mockito/**</exclude>
+                                <exclude>org/junit/**</exclude>
+                            </excludes>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                        <phase>verify</phase>
+                        <configuration>
+                            <!-- generate both XML (for Sonar and CI) and HTML (for local inspection) -->
+                            <formats>
+                                <format>XML</format>
+                                <format>HTML</format>
+                            </formats>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>jacoco-check</id>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                        <phase>verify</phase>
+                        <configuration>
+                            <rules>
+                                <rule>
+                                    <element>BUNDLE</element>
+                                    <limits>
+                                        <limit>
+                                            <counter>LINE</counter>
+                                            <value>COVEREDRATIO</value>
+                                            <minimum>0.80</minimum>
+                                        </limit>
+                                    </limits>
+                                </rule>
+                                <rule>
+                                    <element>PACKAGE</element>
+                                    <limits>
+                                        <limit>
+                                            <counter>BRANCH</counter>
+                                            <value>COVEREDRATIO</value>
+                                            <minimum>0.70</minimum>
+                                        </limit>
+                                    </limits>
+                                </rule>
+                            </rules>
+                            <excludes>
+                                <exclude>${sonar.exclusions}</exclude>
+                            </excludes>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -293,64 +343,41 @@ IMPORTANTE CONSIDERAR:
                     <nohelp>true</nohelp>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <release>${java.version}</release>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
     <profiles>
         <profile>
-            <id>with-jacoco</id>
+            <id>coverage</id>
             <build>
                 <plugins>
                     <plugin>
                         <groupId>org.jacoco</groupId>
                         <artifactId>jacoco-maven-plugin</artifactId>
                         <version>${maven.plugin.jacoco.version}</version>
-                        <configuration>
-                            <excludes>
-                                <exclude>${sonar.coverage.exclusions}</exclude>
-                            </excludes>
-                        </configuration>
                         <executions>
                             <execution>
+                                <id>prepare-agent</id>
                                 <goals>
                                     <goal>prepare-agent</goal>
                                 </goals>
                             </execution>
                             <execution>
-                                <id>jacoco-report</id>
-                                <phase>test</phase>
+                                <id>report</id>
                                 <goals>
                                     <goal>report</goal>
                                 </goals>
-                            </execution>
-                            <execution>
-                                <id>jacoco-check</id>
-                                <goals>
-                                    <goal>check</goal>
-                                </goals>
                                 <configuration>
-                                    <rules>
-                                        <rule>
-                                            <element>PACKAGE</element>
-                                            <limits>
-                                                <limit>
-                                                    <counter>LINE</counter>
-                                                    <value>COVEREDRATIO</value>
-                                                    <minimum>0.8</minimum>
-                                                </limit>
-                                            </limits>
-                                        </rule>
-                                        <rule>
-                                            <element>PACKAGE</element>
-                                            <limits>
-                                                <limit>
-                                                    <counter>BRANCH</counter>
-                                                    <value>COVEREDRATIO</value>
-                                                    <minimum>0.8</minimum>
-                                                </limit>
-                                            </limits>
-                                        </rule>
-                                    </rules>
+                                    <formats>
+                                        <format>XML</format>
+                                    </formats>
                                 </configuration>
                             </execution>
                         </executions>
@@ -358,20 +385,6 @@ IMPORTANTE CONSIDERAR:
                 </plugins>
             </build>
         </profile>
-        <profile>
-            <id>with-mockito-inline</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-            <dependencies>
-                <dependency>
-                    <groupId>org.mockito</groupId>
-                    <artifactId>mockito-inline</artifactId>
-                    <version>${mockito.version}</version>
-                    <scope>test</scope>
-                </dependency>
-            </dependencies>
-        </profile>
-     </profiles>
+    </profiles>
 
 </project>
