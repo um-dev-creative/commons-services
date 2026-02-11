@@ -52,8 +52,8 @@ IMPORTANTE CONSIDERAR:
         <repsy.account.password>${env.REPSY_ACCOUNT_PASSWORD}</repsy.account.password>
         <!--        SPRING -->
         <spring-core.version>6.2.1</spring-core.version>
-        <spring-boot.version>3.4.1</spring-boot.version>
-        <spring-cloud.version>2024.0.0</spring-cloud.version>
+        <spring-boot.version>3.5.8</spring-boot.version>
+        <spring-cloud.version>2025.0.1</spring-cloud.version>
         <mapstruct.version>1.5.5.Final</mapstruct.version>
         <!-- Log4J -->
         <logging.log4j.version>2.24.3</logging.log4j.version>
@@ -231,7 +231,7 @@ IMPORTANTE CONSIDERAR:
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
-                <version>3.4.1</version>
+                <version>3.5.0</version>
                 <configuration>
                     <rules>
                         <dependencyConvergence/>

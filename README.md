@@ -1,6 +1,59 @@
-# commons-services
+# PRX Commons Services components
+[![Quality gate](https://sonarcloud.io/api/project_badges/quality_gate?project=lanmata_security-oauth)](https://sonarcloud.io/summary/new_code?id=lanmata_security-oauth)
 
-Commons components and utilities used by service implementations.
+
+![Java](https://img.shields.io/badge/Java-21-green?logo=java&style=flat-square) ![Maven](https://img.shields.io/badge/Maven-3.8.0-lightgrey?logo=apachemaven&style=flat-square) ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.5.8-green?logo=springboot&style=flat-square) ![Spring Core](https://img.shields.io/badge/Spring%20Core-6.2.1-green?logo=spring&style=flat-square) ![Spring Cloud](https://img.shields.io/badge/Spring%20Cloud-2025.0.1-green?logo=spring&style=flat-square) ![MapStruct](https://img.shields.io/badge/MapStruct-1.5.5.Final-green?style=flat-square) ![Log4j](https://img.shields.io/badge/Log4j-2.24.3-green?style=flat-square) ![JUnit](https://img.shields.io/badge/JUnit-5.11.3-green?logo=junit&style=flat-square) ![Mockito](https://img.shields.io/badge/Mockito-5.14.2-green?style=flat-square) ![Tomcat](https://img.shields.io/badge/Tomcat-11.0.15-green?logo=apachetomcat&style=flat-square) ![JaCoCo](https://img.shields.io/badge/JaCoCo-0.8.15-green?style=flat-square) ![PMD](https://img.shields.io/badge/PMD-3.23.0-green?style=flat-square) ![SpringDoc](https://img.shields.io/badge/SpringDoc%20OpenAPI-1.8.0-green?style=flat-square) ![Gson](https://img.shields.io/badge/Gson-2.13.2-lightgrey?style=flat-square) ![Jackson%20JSR310](https://img.shields.io/badge/Jackson%20JSR310-2.19.4-lightgrey?logo=jackson&style=flat-square)
+
+One-line summary: Shared service components and utilities used by Java microservices (logging, interceptors, config helpers, and common integrations).
+
+## Quick start
+
+Minimum quick steps to build and run tests locally (assumes a JDK is installed and `mvn` is available on PATH):
+
+```powershell
+# Verify Java and Maven
+java -version
+mvn -v
+
+# Run unit tests and produce reports
+mvn -U -DskipITs clean verify
+
+# Run tests with Byte Buddy experimental flag if you encounter Java compatibility errors
+mvn -Dnet.bytebuddy.experimental=true -DskipITs clean test
+
+# Run integration tests (requires configured test environment/profile)
+mvn -P integration-tests verify
+```
+
+## Tech stack and versions
+
+Detected technologies (alphabetically). Each entry lists the technology, the detected version (or a conservative fallback), and the source file where the version was found.
+
+| Technology | Version     | Source |
+|---|-------------|---|
+| Apache Tomcat | 11.0.15     | pom.xml (dependency: org.apache.tomcat.embed:tomcat-embed-core) |
+| Gson | 2.13.2      | pom.xml (dependency: com.google.code.gson:gson) |
+| Jackson Datatype JSR310 | 2.19.4      | pom.xml (dependency: com.fasterxml.jackson.datatype:jackson-datatype-jsr310) |
+| JaCoCo Maven Plugin | 0.8.15      | pom.xml (property: maven.plugin.jacoco.version) |
+| Java | 21          | pom.xml (property: java.version) |
+| JUnit Jupiter BOM | 5.11.3      | pom.xml (dependencyManagement: junit-bom) |
+| JUnit Jupiter Core | 5.9.3       | pom.xml (property: junit.jupiter.core.version) |
+| Log4j | 2.24.3      | pom.xml (property: logging.log4j.version) |
+| MapStruct | 1.5.5.Final | pom.xml (property: mapstruct.version) |
+| Maven | 3.8.0       | pom.xml (presence of Maven project descriptor) |
+| Maven Compiler Plugin | 3.13.0      | pom.xml (property: maven.compiler.plugin.version) |
+| Maven Javadoc Plugin | 3.6.3       | pom.xml (property: maven.plugin.javadoc.version) |
+| Maven JXR Plugin | 3.0.0       | pom.xml (property: maven.plugin.jxr.version) |
+| Maven PMD Plugin | 3.23.0      | pom.xml (property: maven.plugin.pmd.version) |
+| Maven Resource Plugin | 3.3.1       | pom.xml (property: maven.resource.plugin.version) |
+| Maven Surefire Plugin | 3.2.5       | pom.xml (property: maven.surefire.version) |
+| MockServer JUnit | 5.15.0      | pom.xml (property: mockserver.junit.jupiter.version) |
+| Mockito | 5.14.2      | pom.xml (property: mockito.version) |
+| Spring Boot | 3.5.8       | pom.xml  |
+| Spring Cloud | 2024.0.0    | pom.xml (property: spring-cloud.version) |
+| Spring Core | 6.2.1       | pom.xml (property: spring-core.version) |
+| SpringDoc OpenAPI UI | 1.8.0       | pom.xml (dependency: org.springdoc:springdoc-openapi-ui) |
+
 
 ## Overview
 
