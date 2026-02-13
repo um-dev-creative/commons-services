@@ -43,3 +43,6 @@ jobs:
         env:
           QODANA_TOKEN: ${{ secrets.QODANA_TOKEN_2012818793 }}
           QODANA_ENDPOINT: 'https://qodana.cloud'
+      - uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: ${{ runner.temp }}/qodana/results/qodana.sarif.json
