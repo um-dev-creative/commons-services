@@ -43,6 +43,14 @@ projectJDK: "21" #(Applied in CI/CD pipeline)
 #  testCoverageThresholds:
 #    fresh: 70
 #    total: 50
+failureConditions:
+  severityThresholds:
+    any: 50 # Total number of problems in all severities
+    critical: 1 # Severities
+    high: 2
+    moderate: 3
+    low: 4
+    info: 5
 
 #Specify Qodana linter for analysis (Applied in CI/CD pipeline)
 linter: jetbrains/qodana-jvm:2025.3
