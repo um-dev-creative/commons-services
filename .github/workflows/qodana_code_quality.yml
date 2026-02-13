@@ -25,7 +25,7 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
       - name: 'Qodana Scan'
-        uses: ${{ secrets.QODANA_IMAGE }}
+        uses: JetBrains/qodana-action@ffcb814413b72d889076d8ec78294c2d91e8ad27
         env:
           QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
         with:
