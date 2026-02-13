@@ -31,7 +31,7 @@ jobs:
         #   git ls-remote https://github.com/JetBrains/qodana-action refs/tags/v2025.3
         # The command will print: <sha>\trefs/tags/v2025.3 — use the <sha> value below.
         # Example (placeholder):
-        uses: JetBrains/qodana-action@7c830764ccaab16e2d097a49c052896b43578477
+        uses: JetBrains/qodana-action@ffcb814413b72d889076d8ec78294c2d91e8ad27
         env:
           QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
         with:
