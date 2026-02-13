@@ -25,13 +25,7 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
       - name: 'Qodana Scan'
-        # Pin the action to the full commit SHA for reproducible runs.
-        # Replace <FULL_COMMIT_SHA> with the commit SHA for the v2025.3 tag from the JetBrains/qodana-action repository.
-        # You can discover the SHA locally with:
-        #   git ls-remote https://github.com/JetBrains/qodana-action refs/tags/v2025.3
-        # The command will print: <sha>\trefs/tags/v2025.3 — use the <sha> value below.
-        # Example (placeholder):
-        uses: JetBrains/qodana-action@c0354b2dbd2b9ef188dcc229b315af497138c853
+        uses: ${{ secrets.QODANA_IMAGE }}
         env:
           QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
         with:
