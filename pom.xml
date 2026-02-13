@@ -69,6 +69,7 @@ IMPORTANTE CONSIDERAR:
         <sonar.projectName>prx-dev_commons-services</sonar.projectName>
         <sonar.coverage.exclusions>**/*.xml,**/*Application.*,**/config/*,**/loggers/*,**/loggers/interceptor/*,**/mapper/*</sonar.coverage.exclusions>
         <sonar.exclusions>**/*.xml,**/*Application.*,**/config/*,**/mapper/*,**/*.java</sonar.exclusions>
+        <sonar.coverage.jacoco.xmlReportPaths>${project.build.directory}/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
         <project.ruleset>${project.basedir}/ruleset.xml</project.ruleset>
     </properties>
 
