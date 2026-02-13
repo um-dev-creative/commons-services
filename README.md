@@ -138,6 +138,40 @@ CI should run on a JDK 21 runner. Recommended CI steps:
 
 See `README-BUILD.md` for a sample GitHub Actions snippet and more CI guidance.
 
+## How to verify Sonar coverage locally
+
+A short checklist and exact PowerShell commands to generate the JaCoCo XML report and run Sonar locally.
+
+1) Generate the JaCoCo XML report (runs tests and produces XML/HTML reports):
+
+```powershell
+mvn -U -DskipITs clean verify
+```
+
+2) Confirm the JaCoCo XML report exists at the path configured in `pom.xml`:
+
+```powershell
+Test-Path .\target\site\jacoco\jacoco.xml
+```
+
+3) Run Sonar analysis. Choose one of the options below and provide your Sonar token as needed.
+
+- Using Maven (recommended if running on the same machine that built the project):
+
+```powershell
+mvn sonar:sonar -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=<SONAR_TOKEN>
+```
+
+- Using SonarScanner CLI:
+
+```powershell
+sonar-scanner -Dsonar.projectKey=prx-dev_commons-services -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=<SONAR_TOKEN>
+```
+
+Notes:
+- `pom.xml` already sets `sonar.coverage.jacoco.xmlReportPaths` to `target/site/jacoco/jacoco.xml` and includes `src/main/java` in `sonar.inclusions`/`sonar.coverage.inclusions` so Sonar should pick up coverage for production sources.
+- If your CI produces JaCoCo in a different location or runs tests in a different job, ensure the JaCoCo XML is available to the Sonar job (upload/download artifact between jobs or run Sonar in the same job).
+
 ## Documentation
 
 - CHANGELOG.md — project changelog and migration notes
