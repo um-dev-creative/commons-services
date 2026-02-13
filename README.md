@@ -62,7 +62,7 @@ Detected technologies (alphabetically). Each entry lists the technology, the det
 | MockServer JUnit | 5.15.0      | pom.xml (property: mockserver.junit.jupiter.version) |
 | Mockito | 5.14.2      | pom.xml (property: mockito.version) |
 | Spring Boot | 3.5.8       | pom.xml  |
-| Spring Cloud | 2024.0.0    | pom.xml (property: spring-cloud.version) |
+| Spring Cloud | 2025.0.1    | pom.xml (property: spring-cloud.version) |
 | Spring Core | 6.2.1       | pom.xml (property: spring-core.version) |
 | SpringDoc OpenAPI UI | 1.8.0       | pom.xml (dependency: org.springdoc:springdoc-openapi-ui) |
 
@@ -73,12 +73,12 @@ This repository provides shared service-related components used across multiple 
 
 ## Requirements
 
-- Java 25 (JDK 25) is required to build and run the project.
+- Java 21 (JDK 21) is required to build and run the project.
 - Maven 3.8+ (3.9+ recommended).
 - Network access to Maven Central or your organization's proxy/repository.
 
 Minimum supported framework versions:
-- Spring Boot 4.x
+- Spring Boot 3.5.8
 
 See `CHANGELOG.md` and `BUILD_VALIDATION_REPORT.md` for migration details and records of the Spring Boot / Java upgrade work.
 
@@ -94,7 +94,7 @@ mvn -v
 # Clean and run unit tests (skip integration tests)
 mvn -U -DskipITs clean verify
 
-# Run tests with a temporary Byte Buddy workaround (only if you encounter Java 25 compatibility errors)
+# Run tests with a temporary Byte Buddy workaround (only if you encounter Java 21 compatibility errors)
 mvn -Dnet.bytebuddy.experimental=true -DskipITs clean test
 
 # Run integration tests (requires configured test environment/profile)
@@ -103,10 +103,24 @@ mvn -P integration-tests verify
 
 ## Known issues and workarounds
 
-- Byte Buddy / Mockito compatibility with Java 25:
-  - Symptom: Tests fail with the exception: "Java 25 (69) is not supported by the current version of Byte Buddy which officially supports Java 24 (68) - update Byte Buddy or set net.bytebuddy.experimental as a VM property".
-  - Short-term workaround: run the Maven command with `-Dnet.bytebuddy.experimental=true` during test runs.
-  - Recommended long-term fix: upgrade `net.bytebuddy` and `org.mockito` artifacts to published versions that explicitly support Java 25.
+- Byte Buddy / Mockito compatibility with Java 21:
+  - Symptom: Tests may fail with errors mentioning an unsupported Java class file version (for example: "Java 21 (61) not supported") or with Byte Buddy/Mockito instrumentation errors during unit or integration test runs.
+  - Short-term workaround: run Maven tests with the experimental Byte Buddy flag to allow newer class file versions while you update dependencies:
+
+```powershell
+mvn -Dnet.bytebuddy.experimental=true -DskipITs clean test
+```
+
+You can also provide the JVM argument to Surefire/Failsafe or via MAVEN_OPTS if you prefer (for example: `-Dnet.bytebuddy.experimental=true`).
+  - Recommended long-term fix: upgrade `net.bytebuddy` and `org.mockito` artifacts to versions that explicitly state support for Java 21. Check the projects' release notes/CHANGELOG and prefer published releases that list Java 21 compatibility.
+
+- Spring Boot 3.5.8 compatibility notes:
+  - Symptom: After upgrading to Spring Boot 3.5.8 you might encounter dependency conflicts, Jakarta/`javax` namespace issues, or autoconfiguration/test differences caused by dependency version mismatches.
+  - Short-term workarounds:
+    - Use the Spring Boot 3.5.8 BOM (`spring-boot-dependencies`) or the official parent POM to align transitive dependency versions.
+    - Update code that references `javax.*` packages to `jakarta.*` where required by updated Spring libraries.
+    - Refresh your local dependency cache and rebuild: `mvn -U clean verify`.
+  - Recommended long-term fix: follow the migration guidance captured in `BUILD_VALIDATION_REPORT.md` (and `CHANGELOG.md`) and upgrade or replace any third-party libraries that are incompatible with Spring Boot 3.5.x.
 
 - Environment variables referenced by the build:
   - The `pom.xml` references `env.REPSY_ACCOUNT_USER` and `env.REPSY_ACCOUNT_PASSWORD`. Provide these in CI or set them locally if required for publishing tasks.
@@ -115,9 +129,9 @@ For a more detailed validation report and remediation recommendations, see `BUIL
 
 ## Continuous Integration
 
-CI should run on a JDK 25 runner. Recommended CI steps:
+CI should run on a JDK 21 runner. Recommended CI steps:
 - Checkout repo
-- Install JDK 25
+- Install JDK 21
 - Build and run unit tests
 - Run integration tests in a separate job (use Testcontainers or a dedicated test environment for Eureka)
 - Run dependency CVE scan (Dependabot, Snyk, Mend, or equivalent)
@@ -134,7 +148,7 @@ See `README-BUILD.md` for a sample GitHub Actions snippet and more CI guidance.
 
 Contributions are welcome. When opening pull requests:
 - Update or add unit/integration tests for functional changes
-- Ensure the build passes locally with JDK 25
+- Ensure the build passes locally with JDK 21
 - Update the changelog and documentation where appropriate
 
 ## License

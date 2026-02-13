@@ -18,6 +18,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpInputMessage;
 import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.RequestBodyAdviceAdapter;
 
@@ -49,8 +50,9 @@ public class RequestBodyInterceptor extends RequestBodyAdviceAdapter {
      * Called after the request body is read. Delegates logging to {@link LoggingService#displayRequest}.
      */
     @Override
-    public Object afterBodyRead(Object body, HttpInputMessage inputMessage, MethodParameter parameter, Type targetType,
-                                Class<? extends HttpMessageConverter<?>> converterType) {
+    public @NonNull Object afterBodyRead(@NonNull Object body, @NonNull HttpInputMessage inputMessage,
+                                @NonNull MethodParameter parameter, @NonNull Type targetType,
+                                @NonNull Class<? extends HttpMessageConverter<?>> converterType) {
         loggingService.displayRequest(request, body);
         return super.afterBodyRead(body, inputMessage, parameter, targetType, converterType);
     }
@@ -59,7 +61,8 @@ public class RequestBodyInterceptor extends RequestBodyAdviceAdapter {
      * Supports all controller methods.
      */
     @Override
-    public boolean supports(MethodParameter methodParameter, Type type, Class<? extends HttpMessageConverter<?>> aClass) {
+    public boolean supports(@NonNull MethodParameter methodParameter, @NonNull Type type,
+                            @NonNull Class<? extends HttpMessageConverter<?>> aClass) {
         return true;
     }
 }

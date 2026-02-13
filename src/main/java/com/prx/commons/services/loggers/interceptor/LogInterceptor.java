@@ -16,8 +16,8 @@ package com.prx.commons.services.loggers.interceptor;
 import com.prx.commons.services.loggers.LoggingService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.validation.constraints.NotNull;
 import org.springframework.http.HttpMethod;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -46,7 +46,7 @@ public class LogInterceptor implements HandlerInterceptor {
      * @return true to continue processing the request
      */
     @Override
-    public boolean preHandle(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull Object handler) throws Exception {
+    public boolean preHandle(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler) throws Exception {
         if (request.getMethod().equals(HttpMethod.GET.name())
                 ||request.getMethod().equals(HttpMethod.POST.name())
                 ||request.getMethod().equals(HttpMethod.DELETE.name())
