@@ -11,6 +11,7 @@ on:
     branches:
       - main
       - develop
+      - 'releases/*' # The release branches
 
 jobs:
   qodana:
