@@ -53,7 +53,7 @@ IMPORTANTE CONSIDERAR:
         <spring-cloud.version>2025.0.1</spring-cloud.version>
         <mapstruct.version>1.6.3</mapstruct.version>
         <!-- Log4J -->
-        <logging.log4j.version>2.24.3</logging.log4j.version>
+        <logging.log4j.version>2.25.3</logging.log4j.version>
         <!--        JUnit 5.x-->
         <junit.jupiter.version>5.11.3</junit.jupiter.version>
         <junit.jupiter.core.version>5.9.3</junit.jupiter.core.version>
