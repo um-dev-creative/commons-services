@@ -1,4 +1,6 @@
 # PRX Commons Services components
+## Qodana badges
+[![CI](https://github.com/um-dev-creative/commons-services/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/um-dev-creative/commons-services/actions/workflows/ci.yml)
 
 ## Sonar Cloud badges
 [![Quality gate](https://sonarcloud.io/api/project_badges/quality_gate?project=um-dev-creative_commons-services)](https://sonarcloud.io/summary/new_code?id=um-dev-creative_commons-services)
@@ -122,9 +124,6 @@ You can also provide the JVM argument to Surefire/Failsafe or via MAVEN_OPTS if 
     - Refresh your local dependency cache and rebuild: `mvn -U clean verify`.
   - Recommended long-term fix: follow the migration guidance captured in `BUILD_VALIDATION_REPORT.md` (and `CHANGELOG.md`) and upgrade or replace any third-party libraries that are incompatible with Spring Boot 3.5.x.
 
-- Environment variables referenced by the build:
-  - The `pom.xml` references `env.REPSY_ACCOUNT_USER` and `env.REPSY_ACCOUNT_PASSWORD`. Provide these in CI or set them locally if required for publishing tasks.
-
 For a more detailed validation report and remediation recommendations, see `BUILD_VALIDATION_REPORT.md`.
 
 ## Continuous Integration
@@ -165,7 +164,7 @@ mvn sonar:sonar -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=<SONAR_TOKE
 - Using SonarScanner CLI:
 
 ```powershell
-sonar-scanner -Dsonar.projectKey=prx-dev_commons-services -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=<SONAR_TOKEN>
+sonar-scanner -Dsonar.projectKey=um-dev-creative_commons-services -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=<SONAR_TOKEN>
 ```
 
 Notes:

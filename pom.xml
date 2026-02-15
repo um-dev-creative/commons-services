@@ -51,7 +51,7 @@ IMPORTANTE CONSIDERAR:
         <spring-core.version>6.2.1</spring-core.version>
         <spring-boot.version>3.5.8</spring-boot.version>
         <spring-cloud.version>2025.0.1</spring-cloud.version>
-        <mapstruct.version>1.5.5.Final</mapstruct.version>
+        <mapstruct.version>1.6.3</mapstruct.version>
         <!-- Log4J -->
         <logging.log4j.version>2.24.3</logging.log4j.version>
         <!--        JUnit 5.x-->
@@ -62,6 +62,8 @@ IMPORTANTE CONSIDERAR:
         <mockito.version>5.14.2</mockito.version>
         <!--        Coverage and Sonar-->
         <asm.version>9.7</asm.version>
+        <rewrite.plugin.version>5.42.0</rewrite.plugin.version>
+        <rewrite.recipe.version>5.21.0</rewrite.recipe.version>
         <!-- argLine used by Surefire/Jacoco; default empty so builds don't fail when not set -->
         <argLine/>
         <sonar.organization>prx-dev</sonar.organization>
@@ -177,8 +179,8 @@ IMPORTANTE CONSIDERAR:
                 <groupId>org.junit</groupId>
                 <artifactId>junit-bom</artifactId>
                 <version>${junit.jupiter.version}</version>
-                <type>pom</type>
                 <scope>import</scope>
+                <type>pom</type>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -224,7 +226,11 @@ IMPORTANTE CONSIDERAR:
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${maven.surefire.version}</version>
                 <configuration>
-                    <argLine>${argLine}</argLine>
+                    <!-- Ensure jacoco's agent argLine (set by jacoco:prepare-agent) is preserved and combined
+                         with Mockito's javaagent. Jacoco sets a property named 'argLine'; we reference it here
+                         so both agents are passed to the test JVM. If ${argLine} is empty, only Mockito's
+                         agent will be appended. -->
+                    <argLine>${argLine} </argLine>
                 </configuration>
                 <dependencies>
                     <dependency>
@@ -238,15 +244,15 @@ IMPORTANTE CONSIDERAR:
                 <artifactId>maven-pmd-plugin</artifactId>
                 <version>${maven.plugin.pmd.version}</version>
                 <configuration>
-                    <targetJdk>${java.version}</targetJdk>
-                    <linkXRef>false</linkXRef>
-                    <rulesets>
-                        <ruleset>${project.ruleset}</ruleset>
-                    </rulesets>
-                    <excludes>
-                        <exclude>${sonar.exclusions}</exclude>
-                    </excludes>
-                </configuration>
+                     <targetJdk>${java.version}</targetJdk>
+                     <linkXRef>false</linkXRef>
+                     <rulesets>
+                         <ruleset>${project.ruleset}</ruleset>
+                     </rulesets>
+                     <excludes>
+                         <exclude>${sonar.exclusions}</exclude>
+                     </excludes>
+                 </configuration>
                 <executions>
                     <execution>
                         <id>pmd-check</id>
