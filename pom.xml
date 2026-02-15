@@ -66,16 +66,16 @@ IMPORTANTE CONSIDERAR:
         <rewrite.recipe.version>5.21.0</rewrite.recipe.version>
         <!-- argLine used by Surefire/Jacoco; default empty so builds don't fail when not set -->
         <argLine/>
-        <sonar.organization>prx-dev</sonar.organization>
-        <sonar.projectKey>prx-dev_commons-services</sonar.projectKey>
-        <sonar.projectName>prx-dev_commons-services</sonar.projectName>
+        <sonar.organization>umdevc</sonar.organization>
+        <sonar.projectKey>um-dev-creative_commons-services</sonar.projectKey>
+        <sonar.projectName>um-dev-creative_commons-services</sonar.projectName>
         <sonar.coverage.exclusions>**/*.xml,**/*Application.*,**/config/*,**/loggers/*,**/loggers/interceptor/*,**/mapper/*</sonar.coverage.exclusions>
         <!-- Include only production sources for coverage reporting (exclude tests). Adjust glob if your sources live elsewhere) -->
         <sonar.coverage.inclusions>src/main/java/**/*.java</sonar.coverage.inclusions>
         <!-- Ensure Sonar analyzes production Java sources for both analysis and coverage -->
         <sonar.inclusions>src/main/java/**/*.java</sonar.inclusions>
         <!-- Do not exclude all Java files — previous config removed all Java from Sonar analysis. Keep resource/config exclusions only. -->
-        <sonar.exclusions>**/*.xml,**/*Application.*,**/config/*,**/mapper/*</sonar.exclusions>
+        <sonar.exclusions>**/*.xml,**/*Application.*,**/config/*,**/loggers/*,**/loggers/interceptor/*,**/mapper/*</sonar.exclusions>
         <sonar.coverage.jacoco.xmlReportPaths>${project.build.directory}/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
         <project.ruleset>${project.basedir}/ruleset.xml</project.ruleset>
     </properties>
