@@ -37,38 +37,42 @@ IMPORTANTE CONSIDERAR:
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>21</java.version>
+        <!-- argLine used by Surefire/Jacoco; default empty so builds don't fail when not set -->
+        <argLine/>
         <!--        MAVEN-->
+        <maven.compiler.release>${java.version}</maven.compiler.release>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
-        <maven.compiler.plugin.version>3.13.0</maven.compiler.plugin.version>
+        <maven.compiler.plugin.version>3.14.1</maven.compiler.plugin.version>
         <maven.resource.plugin.version>3.3.1</maven.resource.plugin.version>
         <maven.plugin.javadoc.version>3.6.3</maven.plugin.javadoc.version>
         <maven.plugin.jacoco.version>0.8.14</maven.plugin.jacoco.version>
-        <maven.plugin.pmd.version>3.23.0</maven.plugin.pmd.version>
+        <maven.plugin.pmd.version>3.28.0</maven.plugin.pmd.version>
         <maven.plugin.jxr.version>3.0.0</maven.plugin.jxr.version>
-        <maven.surefire.version>3.2.5</maven.surefire.version>
+        <maven.surefire.version>3.5.2</maven.surefire.version>
+
         <!--        SPRING -->
-        <spring-core.version>6.2.1</spring-core.version>
         <spring-boot.version>3.5.8</spring-boot.version>
         <spring-cloud.version>2025.0.1</spring-cloud.version>
+        <spring-core.version>6.2.1</spring-core.version>
+
+        <!-- Centralized explicit versions previously hard-coded in dependencies -->
         <mapstruct.version>1.6.3</mapstruct.version>
-        <!-- Log4J -->
-        <logging.log4j.version>2.24.3</logging.log4j.version>
-        <!--        JUnit 5.x-->
-        <junit.jupiter.version>5.11.3</junit.jupiter.version>
-        <junit.jupiter.core.version>5.9.3</junit.jupiter.core.version>
-        <!--        Mockito-->
-        <mockserver.junit.jupiter.version>5.15.0</mockserver.junit.jupiter.version>
-        <mockito.version>5.14.2</mockito.version>
-        <!--        Coverage and Sonar-->
+        <log4j.version>2.25.3</log4j.version>
         <asm.version>9.7</asm.version>
         <rewrite.plugin.version>5.42.0</rewrite.plugin.version>
         <rewrite.recipe.version>5.21.0</rewrite.recipe.version>
-        <!-- argLine used by Surefire/Jacoco; default empty so builds don't fail when not set -->
-        <argLine/>
+
+        <!--        Test Dependencies-->
+        <!--        JUnit 5.x-->
+        <junit.jupiter.version>5.14.1</junit.jupiter.version>
+        <!--        Mockito-->
+        <mockito.version>5.21.0</mockito.version>
+
+        <!--        Coverage and Sonar-->
         <sonar.organization>umdevc</sonar.organization>
-        <sonar.projectKey>um-dev-creative_commons-services</sonar.projectKey>
-        <sonar.projectName>um-dev-creative_commons-services</sonar.projectName>
+        <sonar.projectKey>umdc-commons-services</sonar.projectKey>
+        <sonar.projectName>umdc-commons-services</sonar.projectName>
         <sonar.coverage.exclusions>**/*.xml,**/*Application.*,**/config/*,**/loggers/*,**/loggers/interceptor/*,**/mapper/*</sonar.coverage.exclusions>
         <!-- Include only production sources for coverage reporting (exclude tests). Adjust glob if your sources live elsewhere) -->
         <sonar.coverage.inclusions>src/main/java/**/*.java</sonar.coverage.inclusions>
@@ -162,7 +166,7 @@ IMPORTANTE CONSIDERAR:
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-core</artifactId>
-            <version>${logging.log4j.version}</version>
+            <version>${log4j.version}</version>
         </dependency>
     </dependencies>
 
