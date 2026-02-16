@@ -1,22 +1,24 @@
 # PRX Commons Services components
 ## Qodana badges
-[![CI](https://github.com/um-dev-creative/commons-services/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/um-dev-creative/commons-services/actions/workflows/ci.yml)
+[![Qodana](https://github.com/um-dev-creative/commons-services/actions/workflows/qodana_code_quality.yml/badge.svg)](https://github.com/um-dev-creative/commons-services/actions/workflows/qodana_code_quality.yml)
 
 ## Sonar Cloud badges
-[![Quality gate](https://sonarcloud.io/api/project_badges/quality_gate?project=um-dev-creative_commons-services)](https://sonarcloud.io/summary/new_code?id=um-dev-creative_commons-services)
+[![Quality gate](https://sonarcloud.io/api/project_badges/quality_gate?project=umdc-commons-services)](https://sonarcloud.io/summary/new_code?id=umdc-commons-services)
 
-[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=um-dev-creative_commons-services&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=um-dev-creative_commons-services)
-[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=um-dev-creative_commons-services&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=um-dev-creative_commons-services)
-[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=um-dev-creative_commons-services&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=um-dev-creative_commons-services)
-[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=um-dev-creative_commons-services&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=um-dev-creative_commons-services)
-[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=um-dev-creative_commons-services&metric=coverage)](https://sonarcloud.io/summary/new_code?id=um-dev-creative_commons-services)
-[![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=um-dev-creative_commons-services&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=um-dev-creative_commons-services)
-[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=um-dev-creative_commons-services&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=um-dev-creative_commons-services)
-[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=um-dev-creative_commons-services&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=um-dev-creative_commons-services)
-[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=um-dev-creative_commons-services&metric=bugs)](https://sonarcloud.io/summary/new_code?id=um-dev-creative_commons-services)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=umdc-commons-services&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=umdc-commons-services)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=umdc-commons-services&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=umdc-commons-services)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=umdc-commons-services&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=umdc-commons-services)
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=umdc-commons-services&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=umdc-commons-services)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=umdc-commons-services&metric=coverage)](https://sonarcloud.io/summary/new_code?id=umdc-commons-services)
+[![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=umdc-commons-services&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=umdc-commons-services)
+[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=umdc-commons-services&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=umdc-commons-services)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=umdc-commons-services&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=umdc-commons-services)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=umdc-commons-services&metric=bugs)](https://sonarcloud.io/summary/new_code?id=umdc-commons-services)
 
 ## Technologies
-![Java](https://img.shields.io/badge/Java-21-green?logo=java&style=flat-square) ![Maven](https://img.shields.io/badge/Maven-3.8.0-lightgrey?logo=apachemaven&style=flat-square) ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.5.8-green?logo=springboot&style=flat-square) ![Spring Core](https://img.shields.io/badge/Spring%20Core-6.2.1-green?logo=spring&style=flat-square) ![Spring Cloud](https://img.shields.io/badge/Spring%20Cloud-2025.0.1-green?logo=spring&style=flat-square) ![MapStruct](https://img.shields.io/badge/MapStruct-1.5.5.Final-green?style=flat-square) ![Log4j](https://img.shields.io/badge/Log4j-2.24.3-green?style=flat-square) ![JUnit](https://img.shields.io/badge/JUnit-5.11.3-green?logo=junit&style=flat-square) ![Mockito](https://img.shields.io/badge/Mockito-5.14.2-green?style=flat-square) ![Tomcat](https://img.shields.io/badge/Tomcat-11.0.15-green?logo=apachetomcat&style=flat-square) ![JaCoCo](https://img.shields.io/badge/JaCoCo-0.8.15-green?style=flat-square) ![PMD](https://img.shields.io/badge/PMD-3.23.0-green?style=flat-square) ![SpringDoc](https://img.shields.io/badge/SpringDoc%20OpenAPI-1.8.0-green?style=flat-square) ![Gson](https://img.shields.io/badge/Gson-2.13.2-lightgrey?style=flat-square) ![Jackson%20JSR310](https://img.shields.io/badge/Jackson%20JSR310-2.19.4-lightgrey?logo=jackson&style=flat-square)
+
+<!-- Badges: use Shields.io badges with versions taken from pom.xml properties/dependencies -->
+![Java](https://img.shields.io/badge/Java-21-green?logo=java&style=flat-square) ![Maven](https://img.shields.io/badge/Maven-3.8-lightgrey?logo=apachemaven&style=flat-square) ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.5.8-green?logo=springboot&style=flat-square) ![Spring Core](https://img.shields.io/badge/Spring%20Core-6.2.1-green?logo=spring&style=flat-square) ![Spring Cloud](https://img.shields.io/badge/Spring%20Cloud-2025.0.1-green?logo=spring&style=flat-square) ![MapStruct](https://img.shields.io/badge/MapStruct-1.6.3-green?style=flat-square) ![Log4j](https://img.shields.io/badge/Log4j-2.25.3-green?style=flat-square) ![JUnit](https://img.shields.io/badge/JUnit-5.14.1-green?logo=junit&style=flat-square) ![Mockito](https://img.shields.io/badge/Mockito-5.21.0-green?style=flat-square) ![Tomcat](https://img.shields.io/badge/Tomcat-11.0.15-green?logo=apachetomcat&style=flat-square) ![JaCoCo](https://img.shields.io/badge/JaCoCo-0.8.14-green?style=flat-square) ![PMD](https://img.shields.io/badge/PMD-3.28.0-green?style=flat-square) ![SpringDoc](https://img.shields.io/badge/SpringDoc%20OpenAPI-1.8.0-green?style=flat-square) ![Gson](https://img.shields.io/badge/Gson-detected-lightgrey?style=flat-square) ![Jackson%20JSR310](https://img.shields.io/badge/Jackson%20JSR310-detected-lightgrey?logo=jackson&style=flat-square)
 
 One-line summary: Shared service components and utilities used by Java microservices (logging, interceptors, config helpers, and common integrations).
 
@@ -43,31 +45,27 @@ mvn -P integration-tests verify
 
 Detected technologies (alphabetically). Each entry lists the technology, the detected version (or a conservative fallback), and the source file where the version was found.
 
-| Technology | Version     | Source |
-|---|-------------|---|
-| Apache Tomcat | 11.0.15     | pom.xml (dependency: org.apache.tomcat.embed:tomcat-embed-core) |
-| Gson | 2.13.2      | pom.xml (dependency: com.google.code.gson:gson) |
-| Jackson Datatype JSR310 | 2.19.4      | pom.xml (dependency: com.fasterxml.jackson.datatype:jackson-datatype-jsr310) |
-| JaCoCo Maven Plugin | 0.8.14      | pom.xml (property: maven.plugin.jacoco.version) |
-| Java | 21          | pom.xml (property: java.version) |
-| JUnit Jupiter BOM | 5.11.3      | pom.xml (dependencyManagement: junit-bom) |
-| JUnit Jupiter Core | 5.9.3       | pom.xml (property: junit.jupiter.core.version) |
-| Log4j | 2.24.3      | pom.xml (property: logging.log4j.version) |
-| MapStruct | 1.5.5.Final | pom.xml (property: mapstruct.version) |
-| Maven | 3.8.0       | pom.xml (presence of Maven project descriptor) |
-| Maven Compiler Plugin | 3.13.0      | pom.xml (property: maven.compiler.plugin.version) |
-| Maven Javadoc Plugin | 3.6.3       | pom.xml (property: maven.plugin.javadoc.version) |
-| Maven JXR Plugin | 3.0.0       | pom.xml (property: maven.plugin.jxr.version) |
-| Maven PMD Plugin | 3.23.0      | pom.xml (property: maven.plugin.pmd.version) |
-| Maven Resource Plugin | 3.3.1       | pom.xml (property: maven.resource.plugin.version) |
-| Maven Surefire Plugin | 3.2.5       | pom.xml (property: maven.surefire.version) |
-| MockServer JUnit | 5.15.0      | pom.xml (property: mockserver.junit.jupiter.version) |
-| Mockito | 5.14.2      | pom.xml (property: mockito.version) |
-| Spring Boot | 3.5.8       | pom.xml  |
-| Spring Cloud | 2025.0.1    | pom.xml (property: spring-cloud.version) |
-| Spring Core | 6.2.1       | pom.xml (property: spring-core.version) |
-| SpringDoc OpenAPI UI | 1.8.0       | pom.xml (dependency: org.springdoc:springdoc-openapi-ui) |
-
+| Technology | Version | Source |
+|---|---:|---|
+| Apache Tomcat | 11.0.15 | pom.xml (dependency: org.apache.tomcat.embed:tomcat-embed-core) |
+| ASM | 9.7 | pom.xml (property: asm.version) |
+| Gson | detected | pom.xml (dependency: com.google.code.gson:gson - version inherited/managed) |
+| Jackson Datatype JSR310 | detected | pom.xml (dependency: com.fasterxml.jackson.datatype:jackson-datatype-jsr310 - version managed by parent) |
+| JaCoCo Maven Plugin | 0.8.14 | pom.xml (property: maven.plugin.jacoco.version) |
+| Java | 21 | pom.xml (property: java.version / parent: spring-boot-starter-parent) |
+| JUnit Jupiter BOM | 5.14.1 | pom.xml (property: junit.jupiter.version) |
+| MapStruct | 1.6.3 | pom.xml (property: mapstruct.version) |
+| Maven Compiler Plugin | 3.14.1 | pom.xml (property: maven.compiler.plugin.version) |
+| Maven Javadoc Plugin | 3.6.3 | pom.xml (property: maven.plugin.javadoc.version) |
+| Maven PMD Plugin | 3.28.0 | pom.xml (property: maven.plugin.pmd.version) |
+| Maven Resource Plugin | 3.3.1 | pom.xml (property: maven.resource.plugin.version) |
+| Maven Surefire Plugin | 3.5.2 | pom.xml (property: maven.surefire.version) |
+| Mockito | 5.21.0 | pom.xml (property: mockito.version) |
+| REWRITE Plugin | 5.42.0 | pom.xml (property: rewrite.plugin.version) |
+| Spring Boot | 3.5.8 | pom.xml (parent: org.springframework.boot:spring-boot-starter-parent) |
+| Spring Cloud | 2025.0.1 | pom.xml (property: spring-cloud.version) |
+| Spring Core | 6.2.1 | pom.xml (property: spring-core.version) |
+| SpringDoc OpenAPI UI | 1.8.0 | pom.xml (dependency: org.springdoc:springdoc-openapi-ui) |
 
 ## Overview
 
