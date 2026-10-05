@@ -68,8 +68,7 @@ public class CloudflareR2StorageClient {
      */
     private S3Client buildS3Client() {
         logger.info("Initializing Cloudflare R2 S3 client");
-        logger.info("Endpoint: {} \n Access Key: {} \n Bucket: {}", properties.getEndpoint(),
-                properties.getAccessKey(), properties.getBucketName());
+        logger.info("Endpoint: {}, Bucket: {}", properties.getEndpoint(), properties.getBucketName());
 
         AwsBasicCredentials credentials = AwsBasicCredentials.create(
             properties.getAccessKey(),

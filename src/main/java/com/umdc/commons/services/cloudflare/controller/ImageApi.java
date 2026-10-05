@@ -21,6 +21,7 @@ import com.umdc.commons.services.cloudflare.exception.ImageUploadException;
 import com.umdc.commons.services.cloudflare.exception.ImageValidationException;
 import com.umdc.commons.services.cloudflare.service.ImageService;
 import com.umdc.commons.services.cloudflare.to.ImageReferenceResponse;
+import com.umdc.commons.services.cloudflare.to.ImageUploadRequest;
 import com.umdc.commons.services.cloudflare.to.ImageUploadResponse;
 import com.umdc.commons.util.HttpStatusUtil;
 import io.swagger.v3.oas.annotations.Operation;
@@ -153,7 +154,7 @@ public interface ImageApi {
             @Parameter(description = "MIME type of the image (defaults to image/jpeg)")
             @RequestPart(required = false) String contentType)
             throws ImageValidationException, ImageUploadException {
-        return ResponseEntity.status(HttpStatusUtil.NOT_IMPLEMENTED).body(null);
+        return getService().upload(ImageUploadRequest.of(objectKey, image, contentType));
     }
 
     /**
@@ -185,7 +186,7 @@ public interface ImageApi {
             @Parameter(description = "Storage key / path of the image", required = true)
             @RequestParam String objectKey)
             throws ImageNotFoundException, ImageDownloadException {
-        return ResponseEntity.status(HttpStatusUtil.NOT_IMPLEMENTED).body(new byte[0]);
+        return getService().download(objectKey);
     }
 
     /**
@@ -221,7 +222,7 @@ public interface ImageApi {
             @Parameter(description = "Storage key / path of the image to delete", required = true)
             @RequestParam String objectKey)
             throws ImageNotFoundException, ImageDeleteException {
-        return ResponseEntity.status(HttpStatusUtil.NOT_IMPLEMENTED).build();
+        return getService().delete(objectKey);
     }
 
     /**
@@ -250,7 +251,7 @@ public interface ImageApi {
             @RequestHeader(SESSION_TOKEN_KEY) String token,
             @Parameter(description = "Storage key / path to check", required = true)
             @RequestParam String objectKey) throws ImageStorageException {
-        return ResponseEntity.status(HttpStatusUtil.NOT_IMPLEMENTED).body(false);
+        return getService().exists(objectKey);
     }
 
     /**
@@ -286,7 +287,7 @@ public interface ImageApi {
             @Parameter(description = "Storage key / path of the image", required = true)
             @RequestParam String objectKey)
             throws ImageStorageException {
-        return ResponseEntity.status(HttpStatusUtil.NOT_IMPLEMENTED).body(null);
+        return getService().getReference(objectKey);
     }
 
     /**
@@ -317,6 +318,6 @@ public interface ImageApi {
             @RequestHeader(SESSION_TOKEN_KEY) String token,
             @Parameter(description = "Key prefix to filter results (optional)")
             @RequestParam(required = false) String prefix) throws ImageStorageException {
-        return ResponseEntity.status(HttpStatusUtil.NOT_IMPLEMENTED).body(List.of());
+        return getService().list(prefix);
     }
 }
