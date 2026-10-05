@@ -27,7 +27,7 @@ import org.springframework.stereotype.Service;
 @Service
 public final class PrinterUtil {
 
-    @Value("${log.debug}")
+    @Value("${log.debug:false}")
     private boolean isDebug;
 
     /**

@@ -18,8 +18,11 @@ This file follows a simple "Unreleased" top section for ongoing work and dated e
 - `.ai/` directory with agent, role, conference, and skill configuration files for AI-assisted development workflows.
 - `.github/prompts/` directory with structured prompt files for agents, features, skills, and shared baseline/restrictions.
 - `AGENTS.md` with contributor guidance for AI agents working in this repository.
+- Unit tests for the Cloudflare integration: `CloudflareR2Properties`, `CloudflareR2StorageClient`, `ImageApi`, `ImageService`, image transfer objects (`ImageUploadRequest`, `ImageUploadResponse`, `ImageReferenceResponse`), `ImageStorageException`, `StoreProperties`, and `ManagementAuthenticatorProperties`.
 
 ### Changed
+- **Package rename `com.prx` → `com.umdc`**: Cloudflare services, logging, REST, config/mapper, properties, and utility classes (plus their tests and `application.yml` references) moved to the `com.umdc.commons.services` namespace. Consumers must update their imports.
+- Logging tests reorganized: `LoggingServiceImpUnitTest` and `LoggingServiceTest` moved to the new package layout and updated.
 - **`ClientRestTemplate`** — `MappingJackson2HttpMessageConverter` is deprecated since Spring Framework 7.0 in favour of `JacksonJsonHttpMessageConverter`. Full migration is blocked: `JacksonJsonHttpMessageConverter` requires Jackson 3.x (`tools.jackson`) which is not yet on the classpath (project currently uses Jackson 2.x `com.fasterxml.jackson`). A `@SuppressWarnings("deprecation")` annotation and Javadoc migration note have been added to `ClientRestTemplate` to track this until the Jackson 3.x upgrade is completed.
 - Apache Tomcat embed version centralized to property `apache.tomcat.version` (updated to `11.0.21`).
 

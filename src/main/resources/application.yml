@@ -1,4 +1,4 @@
 umdc:
   logging:
     trace:
-      enabled: ${LOGGING_TRACE_ENABLED}
+      enabled: ${LOGGING_TRACE_ENABLED:false}
