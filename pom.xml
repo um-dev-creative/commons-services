@@ -36,7 +36,7 @@ IMPORTANTE CONSIDERAR:
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <java.version>21</java.version>
+        <java.version>25</java.version>
         <!-- argLine used by Surefire/Jacoco; default empty so builds don't fail when not set -->
         <argLine/>
         <!--        MAVEN-->
