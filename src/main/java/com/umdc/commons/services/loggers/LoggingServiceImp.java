@@ -36,7 +36,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Service
 public class LoggingServiceImp implements LoggingService {
 
-    @Value("${umdc.logging.trace.enabled}")
+    @Value("${umdc.logging.trace.enabled:false}")
     private boolean isTraceEnabled;
 
     private static final Logger logger = LoggerFactory.getLogger(LoggingServiceImp.class);
