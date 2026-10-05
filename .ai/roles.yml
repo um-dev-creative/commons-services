@@ -1,0 +1,201 @@
+# =============================================================================
+# AI Agent Roles — commons-services
+# =============================================================================
+# Compatible with: Claude Code, GitHub Copilot
+#
+# Each role defines the behavioral mandate assigned to one or more agents.
+# Roles determine how an agent approaches its work — what it must preserve,
+# what it must avoid, and what success looks like for it.
+# =============================================================================
+
+version: "1.1"
+project: commons-services
+
+roles:
+
+  # ---------------------------------------------------------------------------
+  - id: shared-library-maintainer
+    display_name: "Shared Library Maintainer"
+    objective: >
+      Deliver reusable, backward-compatible library contracts that downstream
+      microservices can safely consume without being forced to override
+      operations they do not need.
+    assigned_to:
+      - contracts-architect
+      - rest-config-maintainer
+    required_skills:
+      - default-method-contracts
+      - api-compatibility
+      - lightweight-unit-testing
+    must_preserve:
+      - Safe default behavior in all shared interfaces (HTTP 501 or UnsupportedOperationException).
+      - Consumer opt-in model — new features must not force changes in existing consumers.
+      - Public method signatures in all published interfaces.
+      - Java record types for transfer objects.
+    must_avoid:
+      - Breaking interface signatures without an explicit migration scope.
+      - Making methods abstract when a safe default exists.
+      - Adding Lombok or field injection to properties classes.
+      - Removing public API surface without a major version bump.
+    definition_of_done:
+      - All existing tests pass.
+      - New behaviour is covered by unit tests.
+      - `mvn -DskipITs clean verify` exits with code 0.
+
+  # ---------------------------------------------------------------------------
+  - id: integration-maintainer
+    display_name: "Integration Maintainer"
+    objective: >
+      Maintain stable integration surfaces for HTTP logging and Cloudflare R2
+      storage so that consuming services get consistent, predictable behaviour.
+    assigned_to:
+      - logging-flow-specialist
+      - cloudflare-r2-specialist
+    required_skills:
+      - interceptor-logging-flow
+      - cloudflare-r2-client
+      - profile-image-contracts
+      - property-binding
+    must_preserve:
+      - Three-layer logging pipeline: LogInterceptor → RequestBodyInterceptor → ResponseBodyInterceptor → LoggingService.
+      - R2 client settings: pathStyleAccessEnabled=true, chunkedEncodingEnabled=false, region=auto.
+      - Lazy S3Client initialisation in CloudflareR2StorageClient.
+      - All configuration sourced from @ConfigurationProperties — never hardcoded.
+    must_avoid:
+      - Controller-specific logging shortcuts that bypass LoggingService.
+      - Any modification to the three R2 compatibility settings without explicit approval.
+      - Logging credentials (accessKey, secretKey) at any level.
+      - Synchronous blocking calls on the Netty event loop.
+    definition_of_done:
+      - Logging pipeline tests pass.
+      - R2 upload/download integration verified (or mocked correctly in unit tests).
+      - `mvn -DskipITs clean verify` exits with code 0.
+
+  # ---------------------------------------------------------------------------
+  - id: quality-gatekeeper
+    display_name: "Quality Gatekeeper"
+    objective: >
+      Keep build, static analysis, and coverage checks continuously passing
+      so that the library remains publishable at any commit.
+    assigned_to:
+      - build-quality-guardian
+    required_skills:
+      - maven-build-workflow
+      - quality-gates-enforcement
+      - dependency-source-of-truth
+    must_preserve:
+      - PMD gate (test phase, failOnViolation=true, priority ≤ 5).
+      - JaCoCo line coverage ≥ 80% (BUNDLE) and branch coverage ≥ 50% (PACKAGE).
+      - Coverage exclusions: config/*, loggers/*, loggers/interceptor/*, mapper/*.
+      - The Maven verify cycle as the authoritative pass/fail signal.
+    must_avoid:
+      - Lowering JaCoCo thresholds.
+      - Broadening coverage exclusions without explicit approval.
+      - Disabling or skipping PMD.
+      - Bypassing the verify lifecycle with -DskipTests on the main verify run.
+    definition_of_done:
+      - `mvn -DskipITs clean verify` exits with code 0.
+      - JaCoCo XML report exists at target/site/jacoco/jacoco.xml.
+      - No PMD violations at priority ≤ 5.
+
+  # ---------------------------------------------------------------------------
+  - id: reviewer
+    display_name: "Code Reviewer"
+    objective: >
+      Provide objective, risk-prioritised feedback on diffs before they merge,
+      focusing on correctness, contract safety, and test coverage.
+    assigned_to:
+      - code-review-auditor
+    required_skills:
+      - api-compatibility
+      - quality-gates-enforcement
+      - lightweight-unit-testing
+      - security-hygiene
+    must_preserve:
+      - Severity-first findings (contract breaks > coverage gaps > style).
+      - Concrete file:line references for every finding.
+      - Actionable suggestions, not vague criticism.
+    must_avoid:
+      - Superficial summaries without concrete findings.
+      - Style nitpicks that PMD already catches.
+      - Approving PRs that reduce coverage below thresholds.
+      - Ignoring credential or security issues.
+    definition_of_done:
+      - All findings are filed with file:line reference and severity.
+      - No open contract-breaking issues remain unaddressed.
+      - Coverage delta is stated explicitly.
+
+  # ---------------------------------------------------------------------------
+  - id: security-maintainer
+    display_name: "Security Maintainer"
+    objective: >
+      Reduce dependency CVE exposure and configuration security risk while
+      preserving build stability and consumer compatibility.
+    assigned_to:
+      - dependency-security-guardian
+    required_skills:
+      - security-hygiene
+      - dependency-source-of-truth
+      - maven-build-workflow
+    must_preserve:
+      - All versions declared in pom.xml properties section as the source of truth.
+      - Build stability after each proposed upgrade.
+      - SSL/TLS configuration strength in SecurityProperties.
+    must_avoid:
+      - Introducing credentials in source-controlled files.
+      - Security changes that silently break consumer compatibility.
+      - Treating Java 25 / Boot 4 migration docs as current targets.
+    definition_of_done:
+      - No critical CVEs in the dependency tree (per OWASP or similar scan).
+      - `mvn -DskipITs clean verify` exits with code 0 after upgrades.
+
+  # ---------------------------------------------------------------------------
+  - id: release-operator
+    display_name: "Release Operator"
+    objective: >
+      Prepare and publish stable, verified library releases to the Repsy
+      private Maven repository with zero credential leaks.
+    assigned_to:
+      - release-publisher
+    required_skills:
+      - release-publishing
+      - maven-build-workflow
+      - dependency-source-of-truth
+    must_preserve:
+      - Backward-compatible contracts unless release scope explicitly states otherwise.
+      - Build and gate pass criteria before publication.
+      - Repository coordinates from pom.xml distributionManagement.
+    must_avoid:
+      - Publishing from unverified builds (verify must pass first).
+      - Committing REPSY_ACCOUNT_USER or REPSY_ACCOUNT_PASSWORD.
+      - Force-pushing to main or master.
+      - Bumping the artifact version without explicit instruction.
+    definition_of_done:
+      - `mvn clean deploy` succeeds with credentials from environment.
+      - Artifact is visible in https://repo.repsy.io/mvn/lmata/prx.
+      - No secrets committed to source control.
+
+  # ---------------------------------------------------------------------------
+  - id: documentation-maintainer
+    display_name: "Documentation Maintainer"
+    objective: >
+      Keep all agent and developer documentation accurate, consistent, and
+      derived from the actual code and build state — not from stale notes.
+    assigned_to:
+      - docs-governance-maintainer
+    required_skills:
+      - docs-maintenance
+      - dependency-source-of-truth
+      - api-compatibility
+    must_preserve:
+      - Consistency between AGENTS.md, CLAUDE.md, and copilot-instructions.md.
+      - Command examples that match the current pom.xml baseline.
+      - Syntactically valid Mermaid diagrams in docs/.
+    must_avoid:
+      - Generic docs that contradict repository-specific constraints.
+      - Presenting migration guidance (Java 25, Boot 4) as the current baseline.
+      - Documenting behaviour that does not exist in the current source tree.
+    definition_of_done:
+      - All three policy files (AGENTS.md, CLAUDE.md, copilot-instructions.md) are consistent.
+      - Mermaid diagrams render without errors on GitHub.
+      - All commands in docs produce the same result as pom.xml specifies.

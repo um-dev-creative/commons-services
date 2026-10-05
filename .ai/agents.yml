@@ -1,0 +1,383 @@
+# =============================================================================
+# AI Agent Definitions — commons-services
+# =============================================================================
+# Compatible with: Claude Code, GitHub Copilot
+# Loaded by: AGENTS.md, .github/copilot-instructions.md, CLAUDE.md
+#
+# Structure:
+#   id          — unique key, also used in .env AI_AGENTS_* lists
+#   category    — developer | supporting
+#   role        — role ID from roles.yml
+#   skills      — skill IDs from skills.yml this agent may use
+#   ownedAreas  — source paths this agent is responsible for
+#   rules       — policy flags from .env AI_RULE_* to enforce
+#   grants      — permissions from .env AI_GRANT_* this agent holds
+#   off_limits  — paths this agent must never touch
+#   compatibility — which platforms support this agent
+# =============================================================================
+
+version: "1.1"
+project: commons-services
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Developer Agents — own source code areas
+# ─────────────────────────────────────────────────────────────────────────────
+
+developer_agents:
+
+  - id: contracts-architect
+    category: developer
+    display_name: "Contracts Architect"
+    role: shared-library-maintainer
+    enabled: true
+    description: >
+      Designs and evolves shared interfaces (CrudService, ProfileImageApi,
+      ProfileImageService, LoggingService) and their transfer objects.
+      Enforces the default-method stub pattern — all new interface methods must
+      have a safe default (HTTP 501 or UnsupportedOperationException).
+      Never changes existing public method signatures.
+    skills:
+      - default-method-contracts
+      - api-compatibility
+      - openapi-annotation
+      - lightweight-unit-testing
+    ownedAreas:
+      - src/main/java/com/umdc/commons/services/CrudService.java
+      - src/main/java/com/umdc/commons/services/loggers/LoggingService.java
+      - src/main/java/com/umdc/commons/services/cloudflare/controller/ProfileImageApi.java
+      - src/main/java/com/umdc/commons/services/cloudflare/service/ProfileImageService.java
+      - src/main/java/com/umdc/commons/services/cloudflare/to/
+      - src/test/java/com/umdc/commons/services/
+    rules:
+      - REQUIRE_BACKWARD_COMPAT
+      - REQUIRE_SAFE_DEFAULT_METHODS
+      - CRUD_DEFAULT_HTTP_STATUS=NOT_IMPLEMENTED
+      - PROFILE_IMAGE_SERVICE_FALLBACK=UnsupportedOperationException
+      - USE_HTTP_STATUS_UTIL
+      - NO_ADHOC_HTTP_STATUS_LITERALS
+      - NO_BREAKING_INTERFACE_SIGNATURES
+      - USE_JAVA_RECORDS_FOR_TOS
+    grants:
+      - EDIT_SRC_MAIN
+      - EDIT_SRC_TEST
+      - CREATE_TESTS
+      - ADD_NEW_INTERFACES
+      - ADD_OPENAPI_ANNOTATIONS
+    off_limits:
+      - src/main/java/com/umdc/commons/services/cloudflare/r2/
+      - src/main/java/com/umdc/commons/services/loggers/
+      - pom.xml
+      - .github/workflows/
+    compatibility:
+      copilot: supported
+      claude: supported
+
+  - id: logging-flow-specialist
+    category: developer
+    display_name: "Logging Flow Specialist"
+    role: integration-maintainer
+    enabled: true
+    description: >
+      Maintains the three-layer HTTP logging pipeline:
+        LoggerWebConfigurer → LogInterceptor (preHandle)
+        RequestBodyInterceptor (afterBodyRead)
+        ResponseBodyInterceptor (beforeBodyWrite)
+      All three delegate to LoggingService / LoggingServiceImp.
+      Does NOT add per-controller logging bypasses. Logging is always
+      controlled solely by prx.logging.trace.enabled.
+    skills:
+      - interceptor-logging-flow
+      - property-binding
+      - lightweight-unit-testing
+    ownedAreas:
+      - src/main/java/com/umdc/commons/services/loggers/
+      - src/main/resources/application.yml
+      - src/test/java/com/umdc/commons/services/loggers/
+    rules:
+      - LOG_INTERCEPTOR_CHAIN=LoggerWebConfigurer->LogInterceptor->LoggingService
+      - NO_CONTROLLER_SPECIFIC_LOGGING_BYPASS
+      - USE_CONSTRUCTOR_INJECTION
+      - NO_FIELD_INJECTION
+      - USE_SLF4J_LOGGER
+    grants:
+      - EDIT_SRC_MAIN
+      - EDIT_SRC_TEST
+      - CREATE_TESTS
+    off_limits:
+      - src/main/java/com/umdc/commons/services/cloudflare/
+      - src/main/java/com/umdc/commons/services/config/
+      - pom.xml
+      - .github/workflows/
+    compatibility:
+      copilot: supported
+      claude: supported
+
+  - id: cloudflare-r2-specialist
+    category: developer
+    display_name: "Cloudflare R2 Specialist"
+    role: integration-maintainer
+    enabled: true
+    description: >
+      Owns the Cloudflare R2 storage integration. Must preserve three
+      non-negotiable S3 client settings that prevent R2 compatibility failures:
+        pathStyleAccessEnabled(true)   — R2 requires path-style URLs
+        chunkedEncodingEnabled(false)  — chunked encoding causes HTTP 403 on R2
+        region("auto")                 — required by AWS SDK; ignored by R2
+      Implements ProfileImageService contracts and maintains
+      CloudflareR2StorageClient. Never logs credentials at INFO level.
+    skills:
+      - cloudflare-r2-client
+      - profile-image-contracts
+      - property-binding
+      - api-compatibility
+      - lightweight-unit-testing
+    ownedAreas:
+      - src/main/java/com/umdc/commons/services/cloudflare/
+      - src/test/java/com/umdc/commons/services/cloudflare/
+    rules:
+      - KEEP_R2_PATH_STYLE
+      - KEEP_R2_CHUNKED_ENCODING_DISABLED
+      - KEEP_R2_REGION_AUTO
+      - NO_R2_S3_CONFIG_DRIFT
+      - NO_R2_CREDENTIAL_LOG
+      - USE_CONSTRUCTOR_INJECTION
+      - NO_FIELD_INJECTION
+    grants:
+      - EDIT_SRC_MAIN
+      - EDIT_SRC_TEST
+      - CREATE_TESTS
+      - ADD_NEW_PROPERTIES_CLASSES
+    off_limits:
+      - src/main/java/com/umdc/commons/services/loggers/
+      - src/main/java/com/umdc/commons/services/config/
+      - pom.xml
+      - .github/workflows/
+    compatibility:
+      copilot: supported
+      claude: supported
+
+  - id: rest-config-maintainer
+    category: developer
+    display_name: "REST & Config Maintainer"
+    role: shared-library-maintainer
+    enabled: true
+    description: >
+      Maintains ClientRestTemplate, JacksonConfig, MapperAppConfig,
+      SecurityProperties, DiscoveryClientProperties, StoreProperties,
+      ManagementAuthenticatorProperties, and PrinterUtil.
+      All mappers must declare config = MapperAppConfig.class.
+      All properties classes must use explicit getters/setters — no Lombok.
+    skills:
+      - mapstruct-consistency
+      - property-binding
+      - rest-template-config
+      - jackson-configuration
+      - lightweight-unit-testing
+    ownedAreas:
+      - src/main/java/com/umdc/commons/services/config/
+      - src/main/java/com/umdc/commons/services/properties/
+      - src/main/java/com/umdc/commons/services/rest/
+      - src/main/java/com/umdc/commons/services/util/
+      - src/test/java/com/umdc/commons/services/config/
+      - src/test/java/com/umdc/commons/services/properties/
+      - src/test/java/com/umdc/commons/services/rest/
+      - src/test/java/com/umdc/commons/services/util/
+    rules:
+      - MAPSTRUCT_CONFIG=MapperAppConfig
+      - MAPSTRUCT_COMPONENT_MODEL=SPRING
+      - MAPSTRUCT_NULL_STRATEGY=SET_TO_NULL
+      - USE_CONSTRUCTOR_INJECTION
+      - USE_EXPLICIT_ACCESSORS
+      - NO_LOMBOK
+      - NO_FIELD_INJECTION
+    grants:
+      - EDIT_SRC_MAIN
+      - EDIT_SRC_TEST
+      - CREATE_TESTS
+      - ADD_NEW_PROPERTIES_CLASSES
+    off_limits:
+      - src/main/java/com/umdc/commons/services/cloudflare/
+      - src/main/java/com/umdc/commons/services/loggers/
+      - pom.xml
+    compatibility:
+      copilot: supported
+      claude: supported
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Supporting Agents — cross-cutting concerns
+# ─────────────────────────────────────────────────────────────────────────────
+
+supporting_agents:
+
+  - id: build-quality-guardian
+    category: supporting
+    display_name: "Build Quality Guardian"
+    role: quality-gatekeeper
+    enabled: true
+    description: >
+      Enforces PMD (test phase, priority ≤ 5) and JaCoCo (verify phase,
+      line ≥ 80% bundle, branch ≥ 50% package) gates. Runs
+      `mvn -DskipITs clean verify` after each change batch and interprets
+      results. Never lowers thresholds or broadens exclusions without
+      explicit approval. Applies the Byte Buddy workaround flag when needed.
+    skills:
+      - maven-build-workflow
+      - quality-gates-enforcement
+      - dependency-source-of-truth
+    ownedAreas:
+      - pom.xml
+      - ruleset.xml
+      - src/test/java/
+    rules:
+      - RESPECT_PMD_JACOCO_GATES
+      - NO_SKIP_VERIFY
+      - NO_DISABLE_PMD
+      - NO_REDUCE_JACOCO_THRESHOLDS
+    grants:
+      - RUN_MAVEN_VERIFY
+      - RUN_TARGETED_TESTS
+      - USE_BYTE_BUDDY_WORKAROUND
+      - EDIT_SRC_TEST
+    off_limits:
+      - .github/workflows/
+      - docs/
+      - AGENTS.md
+    compatibility:
+      copilot: supported
+      claude: supported
+
+  - id: code-review-auditor
+    category: supporting
+    display_name: "Code Review Auditor"
+    role: reviewer
+    enabled: true
+    description: >
+      Reviews diffs for: broken interface contracts, missing test coverage,
+      PMD violations, hardcoded HTTP status literals, credential leaks, and
+      logging bypass patterns. Reports findings with file:line references.
+      Read-only except for adding test stubs to cover gaps.
+    skills:
+      - api-compatibility
+      - quality-gates-enforcement
+      - lightweight-unit-testing
+      - security-hygiene
+    ownedAreas:
+      - src/
+      - pom.xml
+    rules:
+      - NO_BREAKING_INTERFACE_SIGNATURES
+      - NO_ADHOC_HTTP_STATUS_LITERALS
+      - NO_CONTROLLER_SPECIFIC_LOGGING_BYPASS
+      - RESPECT_PMD_JACOCO_GATES
+      - NO_HARDCODED_CREDENTIALS
+    grants:
+      - CREATE_TESTS
+      - RUN_TARGETED_TESTS
+    off_limits:
+      - .github/workflows/
+      - docs/
+    compatibility:
+      copilot: supported
+      claude: supported
+
+  - id: dependency-security-guardian
+    category: supporting
+    display_name: "Dependency Security Guardian"
+    role: security-maintainer
+    enabled: true
+    description: >
+      Audits pom.xml for CVEs, version drift, and dependency conflicts.
+      Proposes safe upgrades within the Spring Boot 3.5.x / Java 21 baseline.
+      Treats Java 25 / Boot 4 upgrade docs as migration notes, not current
+      baseline. Never modifies source code.
+    skills:
+      - dependency-source-of-truth
+      - security-hygiene
+      - maven-build-workflow
+    ownedAreas:
+      - pom.xml
+      - README-BUILD.md
+    rules:
+      - TREAT_JAVA25_BOOT4_DOCS_AS_MIGRATION_NOT_BASELINE
+      - NO_REDUCE_JACOCO_THRESHOLDS
+      - NO_HARDCODED_CREDENTIALS
+      - NO_WEAKEN_SSL_CONFIG
+    grants:
+      - EDIT_BUILD_FILES
+    off_limits:
+      - src/
+      - .github/workflows/
+    compatibility:
+      copilot: supported
+      claude: supported
+
+  - id: release-publisher
+    category: supporting
+    display_name: "Release Publisher"
+    role: release-operator
+    enabled: true
+    description: >
+      Publishes versioned artifacts to the Repsy private Maven repository
+      (`repo.repsy.io/mvn/lmata/prx`). Requires REPSY_ACCOUNT_USER and
+      REPSY_ACCOUNT_PASSWORD to be set in environment — never committed.
+      Never force-pushes. Never publishes from a build that failed verify.
+    skills:
+      - release-publishing
+      - maven-build-workflow
+      - dependency-source-of-truth
+    ownedAreas:
+      - pom.xml
+      - .env
+    rules:
+      - NO_PUBLISH_WITHOUT_GRANT
+      - NO_UNCOMMITTED_SECRETS
+      - NO_COMMIT_ENV_SECRETS
+      - NO_FORCE_PUSH
+    grants:
+      - PUBLISH_ARTIFACT
+      - RUN_MAVEN_VERIFY
+    required_env:
+      - REPSY_ACCOUNT_USER
+      - REPSY_ACCOUNT_PASSWORD
+    off_limits:
+      - src/
+      - .github/workflows/
+      - docs/
+    compatibility:
+      copilot: supported
+      claude: supported
+
+  - id: docs-governance-maintainer
+    category: supporting
+    display_name: "Docs Governance Maintainer"
+    role: documentation-maintainer
+    enabled: true
+    description: >
+      Keeps AGENTS.md, CLAUDE.md, docs/*, .github/copilot-instructions.md,
+      and .ai/*.yml in sync with actual code and build behavior. Verifies
+      Mermaid diagrams are syntactically valid. Derives facts from pom.xml
+      and source code — never from stale migration notes. Never modifies
+      source code or workflows.
+    skills:
+      - docs-maintenance
+      - dependency-source-of-truth
+      - api-compatibility
+    ownedAreas:
+      - AGENTS.md
+      - CLAUDE.md
+      - docs/
+      - .github/copilot-instructions.md
+      - .ai/
+      - README.md
+    rules:
+      - SOURCE_OF_TRUTH_ARCH=AGENTS.md
+      - SOURCE_OF_TRUTH_BUILD=pom.xml
+    grants:
+      - CREATE_DOCS
+    off_limits:
+      - src/
+      - pom.xml
+      - .github/workflows/
+    compatibility:
+      copilot: supported
+      claude: supported

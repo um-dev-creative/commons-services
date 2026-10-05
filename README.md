@@ -1,186 +1,191 @@
-# PRX Commons Services components
-## Qodana badges
+# PRX Commons Services
+
 [![Qodana](https://github.com/um-dev-creative/commons-services/actions/workflows/qodana_code_quality.yml/badge.svg)](https://github.com/um-dev-creative/commons-services/actions/workflows/qodana_code_quality.yml)
-
-## Sonar Cloud badges
 [![Quality gate](https://sonarcloud.io/api/project_badges/quality_gate?project=umdc-commons-services)](https://sonarcloud.io/summary/new_code?id=umdc-commons-services)
-
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=umdc-commons-services&metric=coverage)](https://sonarcloud.io/summary/new_code?id=umdc-commons-services)
 [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=umdc-commons-services&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=umdc-commons-services)
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=umdc-commons-services&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=umdc-commons-services)
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=umdc-commons-services&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=umdc-commons-services)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=umdc-commons-services&metric=bugs)](https://sonarcloud.io/summary/new_code?id=umdc-commons-services)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=umdc-commons-services&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=umdc-commons-services)
 [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=umdc-commons-services&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=umdc-commons-services)
-[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=umdc-commons-services&metric=coverage)](https://sonarcloud.io/summary/new_code?id=umdc-commons-services)
 [![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=umdc-commons-services&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=umdc-commons-services)
 [![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=umdc-commons-services&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=umdc-commons-services)
-[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=umdc-commons-services&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=umdc-commons-services)
-[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=umdc-commons-services&metric=bugs)](https://sonarcloud.io/summary/new_code?id=umdc-commons-services)
 
-## Technologies
+![Java](https://img.shields.io/badge/Java-21-green?logo=java&style=flat-square) ![Maven](https://img.shields.io/badge/Maven-3.8-lightgrey?logo=apachemaven&style=flat-square) ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.5.8-green?logo=springboot&style=flat-square) ![Spring Cloud](https://img.shields.io/badge/Spring%20Cloud-2025.0.1-green?logo=spring&style=flat-square) ![JUnit](https://img.shields.io/badge/JUnit-5.14.1-green?logo=junit&style=flat-square) ![Mockito](https://img.shields.io/badge/Mockito-5.21.0-green?style=flat-square) ![JaCoCo](https://img.shields.io/badge/JaCoCo-0.8.14-green?style=flat-square) ![PMD](https://img.shields.io/badge/PMD-3.28.0-green?style=flat-square)
 
-<!-- Badges: use Shields.io badges with versions taken from pom.xml properties/dependencies -->
-![Java](https://img.shields.io/badge/Java-21-green?logo=java&style=flat-square) ![Maven](https://img.shields.io/badge/Maven-3.8-lightgrey?logo=apachemaven&style=flat-square) ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.5.8-green?logo=springboot&style=flat-square) ![Spring Core](https://img.shields.io/badge/Spring%20Core-6.2.1-green?logo=spring&style=flat-square) ![Spring Cloud](https://img.shields.io/badge/Spring%20Cloud-2025.0.1-green?logo=spring&style=flat-square) ![MapStruct](https://img.shields.io/badge/MapStruct-1.6.3-green?style=flat-square) ![Log4j](https://img.shields.io/badge/Log4j-2.25.3-green?style=flat-square) ![JUnit](https://img.shields.io/badge/JUnit-5.14.1-green?logo=junit&style=flat-square) ![Mockito](https://img.shields.io/badge/Mockito-5.21.0-green?style=flat-square) ![Tomcat](https://img.shields.io/badge/Tomcat-11.0.15-green?logo=apachetomcat&style=flat-square) ![JaCoCo](https://img.shields.io/badge/JaCoCo-0.8.14-green?style=flat-square) ![PMD](https://img.shields.io/badge/PMD-3.28.0-green?style=flat-square) ![SpringDoc](https://img.shields.io/badge/SpringDoc%20OpenAPI-1.8.0-green?style=flat-square) ![Gson](https://img.shields.io/badge/Gson-detected-lightgrey?style=flat-square) ![Jackson%20JSR310](https://img.shields.io/badge/Jackson%20JSR310-detected-lightgrey?logo=jackson&style=flat-square)
+---
 
-One-line summary: Shared service components and utilities used by Java microservices (logging, interceptors, config helpers, and common integrations).
+## What is this?
 
-## Quick start
+`commons-services` is a **shared library (JAR)** — not a runnable application. It provides reusable service components, interfaces, and utilities consumed by PRX microservices. It is published to the private Repsy Maven repository at `repo.repsy.io/mvn/lmata/prx`.
 
-Minimum quick steps to build and run tests locally (assumes a JDK is installed and `mvn` is available on PATH):
+### Purpose
 
-```powershell
-# Verify Java and Maven
-java -version
-mvn -v
+Microservices in the PRX platform share a common set of cross-cutting concerns: HTTP request/response logging, REST client configuration, Cloudflare R2 image storage, and Spring Security properties. Rather than duplicating this logic across services, `commons-services` packages these capabilities as a single dependency that any PRX service can pull in and extend.
 
-# Run unit tests and produce reports
-mvn -U -DskipITs clean verify
+### Design pattern
 
-# Run tests with Byte Buddy experimental flag if you encounter Java compatibility errors
-mvn -Dnet.bytebuddy.experimental=true -DskipITs clean test
+All service interfaces use the **default-method stub** pattern: every operation returns HTTP 501 or throws `UnsupportedOperationException` until the consuming service overrides it. This means consumers implement only what they need, with no abstract-method obligation for unused operations.
 
-# Run integration tests (requires configured test environment/profile)
-mvn -P integration-tests verify
+---
+
+## What's inside
+
+| Component | Package | Description |
+|---|---|---|
+| `CrudService<A,T>` | `com.prx.commons.services` | Generic CRUD contract returning `ResponseEntity`; all methods default to HTTP 501 |
+| `LoggingService` / `LoggingServiceImp` | `com.umdc.commons.services.loggers` | HTTP request/response trace logging; enabled via `prx.logging.trace.enabled` |
+| `ClientRestTemplate` | `com.umdc.commons.services.rest` | `RestTemplate` wrapper with buffered factory and Jackson converter |
+| `ImageApi` | `com.umdc.commons.services.cloudflare.controller` | Spring MVC interface for image REST endpoints (upload, download, delete, exists, reference, list) |
+| `ImageService` | `com.umdc.commons.services.cloudflare.service` | Service contract for image save/retrieve/delete operations |
+| `CloudflareR2StorageClient` | `com.umdc.commons.services.cloudflare.r2.client` | AWS SDK v2 S3 client pre-configured for Cloudflare R2 |
+| `CloudflareR2Properties` | `com.umdc.commons.services.cloudflare.properties` | `@ConfigurationProperties` for `cloudflare.r2.*` settings |
+| `SecurityProperties` | `com.prx.commons.services` | Keystore, truststore, and management authenticator config |
+
+---
+
+## Using this library
+
+### Maven coordinates
+
+```xml
+<dependency>
+    <groupId>com.prx</groupId>
+    <artifactId>commons-services</artifactId>
+    <version>0.0.2</version>
+</dependency>
 ```
 
-## Tech stack and versions
+### Repository
 
-Detected technologies (alphabetically). Each entry lists the technology, the detected version (or a conservative fallback), and the source file where the version was found.
+The artifact is published to a private Repsy repository. Add it to your `pom.xml` or `settings.xml`:
 
-| Technology | Version | Source |
-|---|---:|---|
-| Apache Tomcat | 11.0.15 | pom.xml (dependency: org.apache.tomcat.embed:tomcat-embed-core) |
-| ASM | 9.7 | pom.xml (property: asm.version) |
-| Gson | detected | pom.xml (dependency: com.google.code.gson:gson - version inherited/managed) |
-| Jackson Datatype JSR310 | detected | pom.xml (dependency: com.fasterxml.jackson.datatype:jackson-datatype-jsr310 - version managed by parent) |
-| JaCoCo Maven Plugin | 0.8.14 | pom.xml (property: maven.plugin.jacoco.version) |
-| Java | 21 | pom.xml (property: java.version / parent: spring-boot-starter-parent) |
-| JUnit Jupiter BOM | 5.14.1 | pom.xml (property: junit.jupiter.version) |
-| MapStruct | 1.6.3 | pom.xml (property: mapstruct.version) |
-| Maven Compiler Plugin | 3.14.1 | pom.xml (property: maven.compiler.plugin.version) |
-| Maven Javadoc Plugin | 3.6.3 | pom.xml (property: maven.plugin.javadoc.version) |
-| Maven PMD Plugin | 3.28.0 | pom.xml (property: maven.plugin.pmd.version) |
-| Maven Resource Plugin | 3.3.1 | pom.xml (property: maven.resource.plugin.version) |
-| Maven Surefire Plugin | 3.5.2 | pom.xml (property: maven.surefire.version) |
-| Mockito | 5.21.0 | pom.xml (property: mockito.version) |
-| REWRITE Plugin | 5.42.0 | pom.xml (property: rewrite.plugin.version) |
-| Spring Boot | 3.5.8 | pom.xml (parent: org.springframework.boot:spring-boot-starter-parent) |
-| Spring Cloud | 2025.0.1 | pom.xml (property: spring-cloud.version) |
-| Spring Core | 6.2.1 | pom.xml (property: spring-core.version) |
-| SpringDoc OpenAPI UI | 1.8.0 | pom.xml (dependency: org.springdoc:springdoc-openapi-ui) |
-
-## Overview
-
-This repository provides shared service-related components used across multiple microservices. It contains logging utilities, web logging configuration, interceptors, and other common building blocks.
-
-## Requirements
-
-- Java 21 (JDK 21) is required to build and run the project.
-- Maven 3.8+ (3.9+ recommended).
-- Network access to Maven Central or your organization's proxy/repository.
-
-Minimum supported framework versions:
-- Spring Boot 3.5.8
-
-See `CHANGELOG.md` and `BUILD_VALIDATION_REPORT.md` for migration details and records of the Spring Boot / Java upgrade work.
-
-## Quick build (PowerShell)
-
-Run the following commands from the repository root:
-
-```powershell
-# Verify Java and Maven
-java -version
-mvn -v
-
-# Clean and run unit tests (skip integration tests)
-mvn -U -DskipITs clean verify
-
-# Run tests with a temporary Byte Buddy workaround (only if you encounter Java 21 compatibility errors)
-mvn -Dnet.bytebuddy.experimental=true -DskipITs clean test
-
-# Run integration tests (requires configured test environment/profile)
-mvn -P integration-tests verify
+```xml
+<repository>
+    <id>repsy-prx</id>
+    <url>https://repo.repsy.io/mvn/lmata/prx</url>
+</repository>
 ```
 
-## Known issues and workarounds
+Set the `REPSY_ACCOUNT_USER` and `REPSY_ACCOUNT_PASSWORD` environment variables for authentication.
 
-- Byte Buddy / Mockito compatibility with Java 21:
-  - Symptom: Tests may fail with errors mentioning an unsupported Java class file version (for example: "Java 21 (61) not supported") or with Byte Buddy/Mockito instrumentation errors during unit or integration test runs.
-  - Short-term workaround: run Maven tests with the experimental Byte Buddy flag to allow newer class file versions while you update dependencies:
+### Minimum configuration (Cloudflare R2)
 
-```powershell
+If your service uses image storage, add the following to `application.yml`:
+
+```yaml
+cloudflare:
+  r2:
+    account-id: <your-cloudflare-account-id>
+    endpoint: https://<account-id>.r2.cloudflarestorage.com
+    access-key: <r2-access-key-id>
+    secret-key: <r2-secret-access-key>
+    bucket-name: <bucket-name>
+    public-url: https://<custom-domain-or-r2-dev-url>  # optional
+```
+
+For enabling trace logging:
+
+```yaml
+prx:
+  logging:
+    trace:
+      enabled: true
+```
+
+---
+
+## Building locally
+
+**Requirements:** JDK 21, Maven 3.8+, network access to Maven Central and the Repsy repository.
+
+```bash
+# Full build: compile, test, PMD check, JaCoCo coverage verification
+mvn clean verify
+
+# Skip integration tests (standard local workflow)
+mvn -DskipITs clean verify
+
+# Run unit tests only (no coverage enforcement)
+mvn test
+
+# If Byte Buddy/Mockito fails with Java compatibility errors
 mvn -Dnet.bytebuddy.experimental=true -DskipITs clean test
 ```
 
-You can also provide the JVM argument to Surefire/Failsafe or via MAVEN_OPTS if you prefer (for example: `-Dnet.bytebuddy.experimental=true`).
-  - Recommended long-term fix: upgrade `net.bytebuddy` and `org.mockito` artifacts to versions that explicitly state support for Java 21. Check the projects' release notes/CHANGELOG and prefer published releases that list Java 21 compatibility.
+### Quality gates
 
-- Spring Boot 3.5.8 compatibility notes:
-  - Symptom: After upgrading to Spring Boot 3.5.8 you might encounter dependency conflicts, Jakarta/`javax` namespace issues, or autoconfiguration/test differences caused by dependency version mismatches.
-  - Short-term workarounds:
-    - Use the Spring Boot 3.5.8 BOM (`spring-boot-dependencies`) or the official parent POM to align transitive dependency versions.
-    - Update code that references `javax.*` packages to `jakarta.*` where required by updated Spring libraries.
-    - Refresh your local dependency cache and rebuild: `mvn -U clean verify`.
-  - Recommended long-term fix: follow the migration guidance captured in `BUILD_VALIDATION_REPORT.md` (and `CHANGELOG.md`) and upgrade or replace any third-party libraries that are incompatible with Spring Boot 3.5.x.
+| Gate | Tool | Threshold |
+|---|---|---|
+| Static analysis | PMD (`ruleset.xml`) | Fails on any priority-5 violation |
+| Line coverage | JaCoCo | 80% minimum (BUNDLE) |
+| Branch coverage | JaCoCo | 50% minimum (PACKAGE) |
 
-For a more detailed validation report and remediation recommendations, see `BUILD_VALIDATION_REPORT.md`.
+Coverage is excluded from `**/config/*`, `**/loggers/*`, `**/loggers/interceptor/*`, and `**/mapper/*`.
+
+---
 
 ## Continuous Integration
 
-CI should run on a JDK 21 runner. Recommended CI steps:
-- Checkout repo
-- Install JDK 21
-- Build and run unit tests
-- Run integration tests in a separate job (use Testcontainers or a dedicated test environment for Eureka)
-- Run dependency CVE scan (Dependabot, Snyk, Mend, or equivalent)
+CI runs on a JDK 21 runner. Recommended pipeline:
 
-See `README-BUILD.md` for a sample GitHub Actions snippet and more CI guidance.
+1. Checkout repository
+2. Install JDK 21
+3. `mvn -DskipITs clean verify` — unit tests + quality gates
+4. `mvn -P integration-tests verify` — integration tests (separate job)
+5. Dependency CVE scan (Dependabot, Snyk, or equivalent)
 
-## How to verify Sonar coverage locally
+---
 
-A short checklist and exact PowerShell commands to generate the JaCoCo XML report and run Sonar locally.
+## Verifying Sonar coverage locally
 
-1) Generate the JaCoCo XML report (runs tests and produces XML/HTML reports):
+```bash
+# 1. Generate JaCoCo XML report
+mvn -DskipITs clean verify
 
-```powershell
-mvn -U -DskipITs clean verify
-```
-
-2) Confirm the JaCoCo XML report exists at the path configured in `pom.xml`:
-
-```powershell
-Test-Path .\target\site\jacoco\jacoco.xml
-```
-
-3) Run Sonar analysis. Choose one of the options below and provide your Sonar token as needed.
-
-- Using Maven (recommended if running on the same machine that built the project):
-
-```powershell
+# 2. Run Sonar analysis
 mvn sonar:sonar -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=<SONAR_TOKEN>
 ```
 
-- Using SonarScanner CLI:
+The report is written to `target/site/jacoco/jacoco.xml`. `pom.xml` already sets `sonar.coverage.jacoco.xmlReportPaths` to that path.
 
-```powershell
-sonar-scanner -Dsonar.projectKey=um-dev-creative_commons-services -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=<SONAR_TOKEN>
+---
+
+## Known issues
+
+**Byte Buddy / Mockito + Java 21** — Tests may fail with `"Java 21 (61) not supported"`. Workaround:
+
+```bash
+mvn -Dnet.bytebuddy.experimental=true -DskipITs clean test
 ```
 
-Notes:
-- `pom.xml` already sets `sonar.coverage.jacoco.xmlReportPaths` to `target/site/jacoco/jacoco.xml` and includes `src/main/java` in `sonar.inclusions`/`sonar.coverage.inclusions` so Sonar should pick up coverage for production sources.
-- If your CI produces JaCoCo in a different location or runs tests in a different job, ensure the JaCoCo XML is available to the Sonar job (upload/download artifact between jobs or run Sonar in the same job).
+Long-term fix: upgrade `net.bytebuddy` and `org.mockito` to versions with explicit Java 21 support.
+
+---
 
 ## Documentation
 
-- CHANGELOG.md — project changelog and migration notes
-- BUILD_VALIDATION_REPORT.md — results of the upgrade validation and recommended fixes
-- README-BUILD.md — build/run instructions and CI guidance
+| Document | Description |
+|---|---|
+| [docs/image-api-implementation-guide.md](docs/image-api-implementation-guide.md) | How to implement `ImageApi` and `ImageService` in a consuming service |
+| [docs/cloudflare-r2-integration.md](docs/cloudflare-r2-integration.md) | Low-level `CloudflareR2StorageClient` configuration and R2 quirks |
+| [docs/architecture.md](docs/architecture.md) | Component architecture and how this library fits the PRX platform |
+| [docs/configuration.md](docs/configuration.md) | All supported configuration properties |
+| [docs/api-reference.md](docs/api-reference.md) | REST API reference for all exposed endpoints |
+| CHANGELOG.md | Project changelog and migration notes |
+
+---
 
 ## Contributing
 
-Contributions are welcome. When opening pull requests:
-- Update or add unit/integration tests for functional changes
-- Ensure the build passes locally with JDK 21
-- Update the changelog and documentation where appropriate
+When opening pull requests:
+
+- Add or update unit/integration tests for functional changes
+- Ensure `mvn -DskipITs clean verify` passes locally with JDK 21
+- Update the changelog and relevant docs
+
+---
 
 ## License
 

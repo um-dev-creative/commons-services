@@ -1,0 +1,379 @@
+# =============================================================================
+# AI Agent Skills — commons-services
+# =============================================================================
+# Compatible with: Claude Code, GitHub Copilot
+#
+# Each skill defines:
+#   id          — referenced in agents.yml allowedSkills lists
+#   intent      — what the skill is for
+#   applies_to  — file/package patterns where this skill is relevant
+#   guardrails  — hard constraints the agent must respect while using the skill
+#   examples    — canonical reference files for this skill
+#   patterns    — code patterns to follow or generate
+# =============================================================================
+
+version: "1.1"
+project: commons-services
+
+skills:
+
+  # ---------------------------------------------------------------------------
+  # default-method-contracts
+  # ---------------------------------------------------------------------------
+  - id: default-method-contracts
+    intent: >
+      Preserve safe, consumer-friendly defaults in shared interfaces so that
+      downstream microservices only override the operations they actually need.
+    applies_to:
+      - src/main/java/com/umdc/commons/services/CrudService.java
+      - src/main/java/com/umdc/commons/services/cloudflare/controller/ProfileImageApi.java
+      - src/main/java/com/umdc/commons/services/cloudflare/service/ProfileImageService.java
+      - src/main/java/com/umdc/commons/services/loggers/LoggingService.java
+    guardrails:
+      - CrudService defaults MUST return ResponseEntity with HttpStatus.NOT_IMPLEMENTED (HTTP 501).
+      - ProfileImageService defaults MUST throw UnsupportedOperationException.
+      - ProfileImageApi defaults MUST return ResponseEntity with HttpStatusUtil.NOT_IMPLEMENTED status.
+      - New interface methods MUST have a safe default — never abstract without a default.
+      - Prefer additive API evolution (new methods with defaults) over signature changes.
+      - Never remove or rename existing public interface methods.
+    examples:
+      - src/main/java/com/umdc/commons/services/CrudService.java
+      - src/main/java/com/umdc/commons/services/cloudflare/service/ProfileImageService.java
+      - src/main/java/com/umdc/commons/services/cloudflare/controller/ProfileImageApi.java
+    patterns:
+      crud_default: |
+        default ResponseEntity<T> create(T t) {
+            return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+        }
+      profile_image_default: |
+        default ResponseEntity<PostProfileImageResponse> save(
+                String token, UUID applicationId, byte[] image) throws Exception {
+            throw new UnsupportedOperationException("Not implemented");
+        }
+
+  # ---------------------------------------------------------------------------
+  # api-compatibility
+  # ---------------------------------------------------------------------------
+  - id: api-compatibility
+    intent: >
+      Minimise downstream breakage for the microservices that consume this
+      shared library JAR from the Repsy repository.
+    applies_to:
+      - src/main/java/com/umdc/commons/services/
+    guardrails:
+      - Never change the signature of a published public method.
+      - Never change the return type of a published public method.
+      - Never remove a public method, field, or class from a published package.
+      - When adding a method to an interface, always provide a default implementation.
+      - When adding a field to a @ConfigurationProperties class, make it optional (no required=true).
+    examples:
+      - src/main/java/com/umdc/commons/services/CrudService.java
+      - src/main/java/com/umdc/commons/services/cloudflare/controller/ProfileImageApi.java
+
+  # ---------------------------------------------------------------------------
+  # interceptor-logging-flow
+  # ---------------------------------------------------------------------------
+  - id: interceptor-logging-flow
+    intent: >
+      Maintain the three-layer HTTP logging pipeline without introducing
+      controller-specific coupling or bypassing the LoggingService contract.
+    applies_to:
+      - src/main/java/com/umdc/commons/services/loggers/
+    guardrails:
+      - LogInterceptor MUST fire in preHandle for GET, POST, PUT, DELETE only.
+      - LogInterceptor MUST pass null as body (body not available at preHandle).
+      - LogInterceptor MUST always return true from preHandle.
+      - RequestBodyInterceptor MUST call displayRequest after body is deserialized.
+      - ResponseBodyInterceptor MUST call displayResponse before body is written.
+      - All three MUST delegate to LoggingService — never log directly.
+      - Tracing is controlled exclusively by prx.logging.trace.enabled.
+      - Never add a logging bypass in a specific controller or endpoint.
+      - LoggingServiceImp MUST use ConcurrentHashMap when collecting headers/parameters.
+    examples:
+      - src/main/java/com/umdc/commons/services/loggers/interceptor/LogInterceptor.java
+      - src/main/java/com/umdc/commons/services/loggers/interceptor/RequestBodyInterceptor.java
+      - src/main/java/com/umdc/commons/services/loggers/interceptor/ResponseBodyInterceptor.java
+      - src/main/java/com/umdc/commons/services/loggers/LoggingServiceImp.java
+    patterns:
+      log_interceptor_prehandle: |
+        @Override
+        public boolean preHandle(@NonNull HttpServletRequest request,
+                                 @NonNull HttpServletResponse response,
+                                 @NonNull Object handler) throws Exception {
+            if (request.getMethod().equals(HttpMethod.GET.name())
+                    || request.getMethod().equals(HttpMethod.POST.name())
+                    || request.getMethod().equals(HttpMethod.DELETE.name())
+                    || request.getMethod().equals(HttpMethod.PUT.name())) {
+                loggingService.displayRequest(request, null);
+            }
+            return true;
+        }
+
+  # ---------------------------------------------------------------------------
+  # cloudflare-r2-client
+  # ---------------------------------------------------------------------------
+  - id: cloudflare-r2-client
+    intent: >
+      Build and configure an S3-compatible client for Cloudflare R2, preserving
+      the three non-negotiable settings that ensure R2 compatibility.
+    applies_to:
+      - src/main/java/com/umdc/commons/services/cloudflare/r2/client/CloudflareR2StorageClient.java
+    guardrails:
+      - pathStyleAccessEnabled MUST be true — R2 does not support virtual-hosted-style URLs.
+      - chunkedEncodingEnabled MUST be false — chunked encoding causes HTTP 403 on R2.
+      - Region MUST be Region.of("auto") — required by AWS SDK; R2 ignores the value.
+      - S3Client MUST be lazily initialised (not in constructor).
+      - Credentials MUST come from CloudflareR2Properties — never hardcoded.
+      - Do NOT log accessKey or secretKey values at INFO or DEBUG level.
+      - close() MUST null-check before closing.
+    examples:
+      - src/main/java/com/umdc/commons/services/cloudflare/r2/client/CloudflareR2StorageClient.java
+    patterns:
+      s3_client_build: |
+        S3Configuration serviceConfiguration = S3Configuration.builder()
+            .pathStyleAccessEnabled(true)
+            .chunkedEncodingEnabled(false)
+            .build();
+        return S3Client.builder()
+            .endpointOverride(URI.create(properties.getEndpoint()))
+            .credentialsProvider(StaticCredentialsProvider.create(credentials))
+            .region(Region.of("auto"))
+            .serviceConfiguration(serviceConfiguration)
+            .build();
+
+  # ---------------------------------------------------------------------------
+  # openapi-annotation
+  # ---------------------------------------------------------------------------
+  - id: openapi-annotation
+    intent: >
+      Annotate REST interface methods with SpringDoc OpenAPI annotations
+      so that consuming services get Swagger UI documentation automatically.
+    applies_to:
+      - src/main/java/com/umdc/commons/services/cloudflare/controller/ProfileImageApi.java
+    guardrails:
+      - Use HttpStatusUtil constants in @ApiResponse responseCode fields.
+      - Every endpoint method MUST have @Operation(summary, description).
+      - Every endpoint method MUST have @ApiResponses covering at least success, 400/404, and 500.
+      - Every @PathVariable and @RequestHeader MUST have a @Parameter annotation.
+      - Never use raw numeric status strings (e.g., "200") — use HttpStatusUtil constants.
+    examples:
+      - src/main/java/com/umdc/commons/services/cloudflare/controller/ProfileImageApi.java
+
+  # ---------------------------------------------------------------------------
+  # mapstruct-consistency
+  # ---------------------------------------------------------------------------
+  - id: mapstruct-consistency
+    intent: >
+      Ensure all MapStruct mappers use the shared MapperAppConfig base
+      configuration for consistent behavior across consuming services.
+    applies_to:
+      - src/main/java/com/umdc/commons/services/config/mapper/
+    guardrails:
+      - All @Mapper interfaces MUST declare config = MapperAppConfig.class.
+      - componentModel MUST be SPRING — mappers are Spring beans.
+      - nullValuePropertyMappingStrategy MUST be SET_TO_NULL.
+      - unmappedSourcePolicy and unmappedTargetPolicy MUST be IGNORE.
+    examples:
+      - src/main/java/com/umdc/commons/services/config/mapper/MapperAppConfig.java
+    patterns:
+      mapper_declaration: |
+        @Mapper(config = MapperAppConfig.class)
+        public interface MyEntityMapper {
+            MyDto toDto(MyEntity entity);
+        }
+
+  # ---------------------------------------------------------------------------
+  # property-binding
+  # ---------------------------------------------------------------------------
+  - id: property-binding
+    intent: >
+      Create and maintain @ConfigurationProperties classes that bind
+      external configuration to typed Java objects.
+    applies_to:
+      - src/main/java/com/umdc/commons/services/properties/
+      - src/main/java/com/umdc/commons/services/cloudflare/properties/
+    guardrails:
+      - Every new properties class MUST have an explicit no-arg constructor with a comment.
+      - Properties MUST use explicit getters and setters — no Lombok, no @Data.
+      - Field names MUST match the YAML key names (camelCase maps to kebab-case automatically).
+      - Never declare a field as required=true in @ConfigurationProperties — prefer defaults.
+      - Annotate top-level classes with @ConfigurationProperties(prefix = "...") and @Component
+        or @Configuration as appropriate.
+    examples:
+      - src/main/java/com/umdc/commons/services/cloudflare/properties/CloudflareR2Properties.java
+      - src/main/java/com/umdc/commons/services/properties/SecurityProperties.java
+
+  # ---------------------------------------------------------------------------
+  # rest-template-config
+  # ---------------------------------------------------------------------------
+  - id: rest-template-config
+    intent: >
+      Configure RestTemplate instances with buffering and Jackson converter
+      so that request/response bodies can be read multiple times
+      (required for the logging interceptors).
+    applies_to:
+      - src/main/java/com/umdc/commons/services/rest/ClientRestTemplate.java
+    guardrails:
+      - Always use BufferingClientHttpRequestFactory — not SimpleClientHttpRequestFactory directly.
+      - MappingJackson2HttpMessageConverter MUST be supplied via constructor injection.
+      - Supported media type MUST include APPLICATION_JSON at minimum.
+    examples:
+      - src/main/java/com/umdc/commons/services/rest/ClientRestTemplate.java
+
+  # ---------------------------------------------------------------------------
+  # jackson-configuration
+  # ---------------------------------------------------------------------------
+  - id: jackson-configuration
+    intent: >
+      Configure Jackson ObjectMapper with JavaTimeModule so that Java 8+
+      date/time types serialize and deserialize correctly.
+    applies_to:
+      - src/main/java/com/umdc/commons/services/config/mapper/JacksonConfig.java
+    guardrails:
+      - Always register JavaTimeModule on the ObjectMapper bean.
+      - The ObjectMapper bean MUST be a @Bean in a @Configuration class.
+    examples:
+      - src/main/java/com/umdc/commons/services/config/mapper/JacksonConfig.java
+
+  # ---------------------------------------------------------------------------
+  # maven-build-workflow
+  # ---------------------------------------------------------------------------
+  - id: maven-build-workflow
+    intent: >
+      Use repo-verified Maven commands and the pom.xml as the single source
+      of truth for build configuration.
+    applies_to:
+      - pom.xml
+      - ruleset.xml
+    guardrails:
+      - Java version is 21; Spring Boot is 3.5.8 — do not change without explicit migration scope.
+      - Preferred local verify command: mvn -DskipITs clean verify
+      - Test-only command: mvn test
+      - Single test: mvn test -Dtest=ClassName (or ClassName#methodName)
+      - Byte Buddy workaround (only when needed): mvn -Dnet.bytebuddy.experimental=true -DskipITs clean test
+      - JaCoCo report lands at target/site/jacoco/jacoco.xml after mvn verify.
+    examples:
+      - pom.xml
+
+  # ---------------------------------------------------------------------------
+  # quality-gates-enforcement
+  # ---------------------------------------------------------------------------
+  - id: quality-gates-enforcement
+    intent: >
+      Keep PMD and JaCoCo quality gates passing with project-specific exclusions.
+    applies_to:
+      - pom.xml
+      - ruleset.xml
+      - src/
+    guardrails:
+      - PMD runs at test phase; failOnViolation=true; failure priority ≤ 5.
+      - JaCoCo enforced at verify phase; line ≥ 0.80 (BUNDLE); branch ≥ 0.50 (PACKAGE).
+      - Excluded from coverage and PMD: config/*, loggers/*, loggers/interceptor/*, mapper/*.
+      - Never lower thresholds or add new exclusions without explicit approval.
+    examples:
+      - pom.xml
+      - ruleset.xml
+
+  # ---------------------------------------------------------------------------
+  # lightweight-unit-testing
+  # ---------------------------------------------------------------------------
+  - id: lightweight-unit-testing
+    intent: >
+      Follow the existing JUnit 5 + Mockito style: narrow tests per
+      interface or component, no full Spring context boot unless essential.
+    applies_to:
+      - src/test/java/
+    guardrails:
+      - Prefer @ExtendWith(MockitoExtension.class) over @SpringBootTest.
+      - Use @ExtendWith(SpringExtension.class) only when Spring bean lifecycle is needed.
+      - Use ReflectionTestUtils.setField(...) to set @Value-injected fields.
+      - Each test class should cover one unit (one interface, one class).
+      - Test coverage for new code must not drop below the 80% line / 50% branch thresholds.
+    examples:
+      - src/test/java/com/umdc/commons/services/CrudServiceTest.java
+      - src/test/java/com/umdc/commons/services/loggers/LoggingServiceImpUnitTest.java
+      - src/test/java/com/umdc/commons/services/loggers/interceptor/LogInterceptorTest.java
+
+  # ---------------------------------------------------------------------------
+  # profile-image-contracts
+  # ---------------------------------------------------------------------------
+  - id: profile-image-contracts
+    intent: >
+      Keep ProfileImageApi and ProfileImageService contracts aligned with
+      the shared HttpStatusUtil constants and CloudflareR2StorageClient.
+    applies_to:
+      - src/main/java/com/umdc/commons/services/cloudflare/controller/ProfileImageApi.java
+      - src/main/java/com/umdc/commons/services/cloudflare/service/ProfileImageService.java
+    guardrails:
+      - All API response status codes MUST use HttpStatusUtil constants, not raw integers.
+      - session-token header key MUST use the SESSION_TOKEN_KEY constant.
+      - Transfer objects MUST be Java records (PostProfileImageResponse, GetProfileImageReferenceResponse).
+    examples:
+      - src/main/java/com/umdc/commons/services/cloudflare/controller/ProfileImageApi.java
+
+  # ---------------------------------------------------------------------------
+  # dependency-source-of-truth
+  # ---------------------------------------------------------------------------
+  - id: dependency-source-of-truth
+    intent: >
+      Keep version and dependency management centralized in pom.xml and
+      treat migration documentation as notes, not current baseline.
+    applies_to:
+      - pom.xml
+    guardrails:
+      - pom.xml is the current build truth — always read it before suggesting version changes.
+      - Java 25 and Boot 4 references in docs are migration notes, not current targets.
+      - Never introduce a dependency not already declared in pom.xml without explicit scope.
+    examples:
+      - pom.xml
+
+  # ---------------------------------------------------------------------------
+  # security-hygiene
+  # ---------------------------------------------------------------------------
+  - id: security-hygiene
+    intent: >
+      Keep dependency and configuration risk low for a shared artifact
+      consumed by multiple microservices.
+    applies_to:
+      - pom.xml
+      - src/
+    guardrails:
+      - Never embed credentials, tokens, or secrets in source files or committed configs.
+      - Prefer patched dependency versions and re-run mvn verify after upgrades.
+      - Never weaken SSL/TLS configuration in SecurityProperties or DiscoveryClientProperties.
+      - Credentials in CloudflareR2StorageClient MUST come from properties — never hardcoded.
+
+  # ---------------------------------------------------------------------------
+  # release-publishing
+  # ---------------------------------------------------------------------------
+  - id: release-publishing
+    intent: >
+      Publish library artifacts safely to the Repsy Maven repository
+      without introducing contract changes or credential leaks.
+    applies_to:
+      - pom.xml
+      - .env
+    guardrails:
+      - Repository id/url must match pom.xml distributionManagement (repsy).
+      - REPSY_ACCOUNT_USER and REPSY_ACCOUNT_PASSWORD MUST come from environment — never committed.
+      - Only publish after mvn clean verify passes with exit code 0.
+      - Never bump the artifact version without explicit instruction.
+
+  # ---------------------------------------------------------------------------
+  # docs-maintenance
+  # ---------------------------------------------------------------------------
+  - id: docs-maintenance
+    intent: >
+      Keep AGENTS.md, CLAUDE.md, docs/*, and copilot-instructions.md
+      accurate, consistent, and derived from current code and build state.
+    applies_to:
+      - AGENTS.md
+      - CLAUDE.md
+      - docs/
+      - .github/copilot-instructions.md
+      - .ai/
+    guardrails:
+      - Derive facts from pom.xml and source code — not from migration notes.
+      - Commands in docs MUST match current pom.xml baseline.
+      - Mermaid diagrams MUST be syntactically valid (no subgraph-as-edge-target, no double tilde).
+      - AGENTS.md, CLAUDE.md, and copilot-instructions.md MUST stay consistent with each other.

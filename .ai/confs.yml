@@ -1,0 +1,217 @@
+# =============================================================================
+# AI Agent Configuration — commons-services
+# =============================================================================
+# Compatible with: Claude Code, GitHub Copilot
+#
+# Central configuration consumed by all agents. Values here override
+# per-agent defaults and serve as the authoritative reference for build,
+# quality, coding, and publishing settings.
+# =============================================================================
+
+version: "1.1"
+project: commons-services
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Source of truth pointers
+# ─────────────────────────────────────────────────────────────────────────────
+source_of_truth:
+  build: pom.xml
+  architecture: AGENTS.md
+  claude_guidance: CLAUDE.md
+  copilot_guidance: .github/copilot-instructions.md
+  agent_definitions: .ai/agents.yml
+  skill_definitions: .ai/skills.yml
+  role_definitions: .ai/roles.yml
+  env_policy: .env
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Project baseline (mirrors pom.xml — keep in sync)
+# ─────────────────────────────────────────────────────────────────────────────
+baseline:
+  java_version: "21"
+  spring_boot_version: "3.5.8"
+  spring_cloud_version: "2025.0.1"
+  mapstruct_version: "1.6.3"
+  aws_sdk_version: "2.21.0"
+  junit_version: "5.14.1"
+  mockito_version: "5.21.0"
+  log4j_version: "2.25.3"
+  packaging: jar
+  is_runnable_app: false
+  group_id: com.prx
+  artifact_id: commons-services
+  version: "0.0.1"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Agent roster (mirrors .env AI_AGENTS_*)
+# ─────────────────────────────────────────────────────────────────────────────
+agents:
+  developer:
+    - contracts-architect
+    - logging-flow-specialist
+    - cloudflare-r2-specialist
+    - rest-config-maintainer
+  supporting:
+    - build-quality-guardian
+    - code-review-auditor
+    - dependency-security-guardian
+    - release-publisher
+    - docs-governance-maintainer
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Platform compatibility
+# ─────────────────────────────────────────────────────────────────────────────
+compatibility:
+  copilot:
+    enabled: true
+    instruction_file: .github/copilot-instructions.md
+    primary_policy_files:
+      - AGENTS.md
+      - .ai/agents.yml
+      - .ai/skills.yml
+      - .ai/roles.yml
+      - .ai/confs.yml
+  claude:
+    enabled: true
+    instruction_file: CLAUDE.md
+    primary_policy_files:
+      - AGENTS.md
+      - CLAUDE.md
+      - .ai/agents.yml
+      - .ai/skills.yml
+      - .ai/roles.yml
+      - .ai/confs.yml
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Build commands
+# ─────────────────────────────────────────────────────────────────────────────
+build:
+  default_verify: "mvn -DskipITs clean verify"
+  tests_only: "mvn test"
+  single_test: "mvn test -Dtest={ClassName}"
+  single_method: "mvn test -Dtest={ClassName}#{methodName}"
+  byte_buddy_workaround: "mvn -Dnet.bytebuddy.experimental=true -DskipITs clean test"
+  coverage_report: "mvn verify"
+  publish: "mvn clean deploy"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Quality gates (mirrors pom.xml plugin config)
+# ─────────────────────────────────────────────────────────────────────────────
+quality_gates:
+  pmd:
+    phase: test
+    ruleset: ruleset.xml
+    fail_on_violation: true
+    failure_priority: 5
+  jacoco:
+    phase: verify
+    report_path: target/site/jacoco/jacoco.xml
+    line_coverage_min_bundle: 0.80
+    branch_coverage_min_package: 0.50
+    excluded_packages:
+      - "**/config/*"
+      - "**/loggers/*"
+      - "**/loggers/interceptor/*"
+      - "**/mapper/*"
+  sonar:
+    project_key: umdc-commons-services
+    organization: umdevc
+    report_path: target/site/jacoco/jacoco.xml
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Coding contracts
+# ─────────────────────────────────────────────────────────────────────────────
+coding_contracts:
+
+  interface_defaults:
+    crud_service_fallback: "return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED)"
+    profile_image_service_fallback: "throw new UnsupportedOperationException(\"Not implemented\")"
+    profile_image_api_fallback: "return ResponseEntity.status(HttpStatusUtil.NOT_IMPLEMENTED).body(...)"
+    prefer_additive_api_changes: true
+    new_methods_must_have_defaults: true
+
+  logging:
+    delegate_through_logging_service: true
+    trace_flag_property: "prx.logging.trace.enabled"
+    interceptor_chain:
+      - LoggerWebConfigurer
+      - LogInterceptor        # HandlerInterceptor · preHandle
+      - RequestBodyInterceptor  # RequestBodyAdviceAdapter · afterBodyRead
+      - ResponseBodyInterceptor # ResponseBodyAdvice · beforeBodyWrite
+    no_controller_bypass: true
+
+  cloudflare_r2:
+    path_style_access_enabled: true        # REQUIRED for R2
+    chunked_encoding_enabled: false        # REQUIRED — prevents HTTP 403
+    region: "auto"                         # REQUIRED by AWS SDK; ignored by R2
+    lazy_init_s3_client: true
+    credentials_source: CloudflareR2Properties
+    no_credential_logging: true
+
+  mapstruct:
+    config_class: "com.umdc.commons.services.config.mapper.MapperAppConfig"
+    component_model: SPRING
+    null_value_property_mapping_strategy: SET_TO_NULL
+    unmapped_source_policy: IGNORE
+    unmapped_target_policy: IGNORE
+
+  injection:
+    style: constructor
+    no_field_injection: true
+    no_lombok: true
+
+  transfer_objects:
+    use_java_records: true
+    examples:
+      - com.umdc.commons.services.cloudflare.to.PostProfileImageResponse
+      - com.umdc.commons.services.cloudflare.to.GetProfileImageReferenceResponse
+
+  logging_style:
+    library: SLF4J
+    pattern: "LoggerFactory.getLogger(ClassName.class)"
+    no_system_out: true
+
+  http_status:
+    use_util_class: HttpStatusUtil
+    no_raw_integer_literals: true
+    no_adhoc_string_literals: true
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Publishing
+# ─────────────────────────────────────────────────────────────────────────────
+publishing:
+  repository_id: repsy
+  repository_url: "https://repo.repsy.io/mvn/lmata/prx"
+  required_env:
+    - REPSY_ACCOUNT_USER
+    - REPSY_ACCOUNT_PASSWORD
+  pre_publish_check: "mvn -DskipITs clean verify"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Environment variables required at runtime
+# ─────────────────────────────────────────────────────────────────────────────
+required_env_vars:
+  runtime:
+    - name: LOGGING_TRACE_ENABLED
+      maps_to: prx.logging.trace.enabled
+      default: "false"
+    - name: CLOUDFLARE_ACCOUNT_ID
+      maps_to: cloudflare.r2.accountId
+    - name: CLOUDFLARE_R2_ENDPOINT
+      maps_to: cloudflare.r2.endpoint
+    - name: CLOUDFLARE_R2_ACCESS_KEY
+      maps_to: cloudflare.r2.accessKey
+      sensitive: true
+    - name: CLOUDFLARE_R2_SECRET_KEY
+      maps_to: cloudflare.r2.secretKey
+      sensitive: true
+    - name: CLOUDFLARE_R2_BUCKET_NAME
+      maps_to: cloudflare.r2.bucketName
+    - name: CLOUDFLARE_R2_PUBLIC_URL
+      maps_to: cloudflare.r2.publicUrl
+      optional: true
+  publish_only:
+    - name: REPSY_ACCOUNT_USER
+      sensitive: true
+    - name: REPSY_ACCOUNT_PASSWORD
+      sensitive: true
