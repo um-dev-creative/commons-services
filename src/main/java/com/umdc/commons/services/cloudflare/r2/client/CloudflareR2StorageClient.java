@@ -38,6 +38,7 @@ public class CloudflareR2StorageClient {
 
     private static final Logger logger = LoggerFactory.getLogger(CloudflareR2StorageClient.class);
     private final CloudflareR2Properties properties;
+    private final Object s3ClientLock = new Object();
     private S3Client s3Client;
 
     /**
@@ -54,11 +55,13 @@ public class CloudflareR2StorageClient {
      *
      * @return the S3 client
      */
-    public synchronized S3Client getS3Client() {
-        if (s3Client == null) {
-            s3Client = buildS3Client();
+    public S3Client getS3Client() {
+        synchronized (s3ClientLock) {
+            if (s3Client == null) {
+                s3Client = buildS3Client();
+            }
+            return s3Client;
         }
-        return s3Client;
     }
 
     /**
