@@ -28,6 +28,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -154,7 +155,12 @@ public interface ImageApi {
             @Parameter(description = "MIME type of the image (defaults to image/jpeg)")
             @RequestPart(required = false) String contentType)
             throws ImageValidationException, ImageUploadException {
-        return getService().upload(ImageUploadRequest.of(objectKey, image, contentType));
+        try {
+            return getService().upload(ImageUploadRequest.of(
+                    objectKey, image, contentType != null ? contentType : MediaType.IMAGE_JPEG_VALUE));
+        } catch (UnsupportedOperationException exception) {
+            return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
+        }
     }
 
     /**
@@ -186,7 +192,11 @@ public interface ImageApi {
             @Parameter(description = "Storage key / path of the image", required = true)
             @RequestParam String objectKey)
             throws ImageNotFoundException, ImageDownloadException {
-        return getService().download(objectKey);
+        try {
+            return getService().download(objectKey);
+        } catch (UnsupportedOperationException exception) {
+            return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
+        }
     }
 
     /**
@@ -222,7 +232,11 @@ public interface ImageApi {
             @Parameter(description = "Storage key / path of the image to delete", required = true)
             @RequestParam String objectKey)
             throws ImageNotFoundException, ImageDeleteException {
-        return getService().delete(objectKey);
+        try {
+            return getService().delete(objectKey);
+        } catch (UnsupportedOperationException exception) {
+            return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
+        }
     }
 
     /**
@@ -251,7 +265,11 @@ public interface ImageApi {
             @RequestHeader(SESSION_TOKEN_KEY) String token,
             @Parameter(description = "Storage key / path to check", required = true)
             @RequestParam String objectKey) throws ImageStorageException {
-        return getService().exists(objectKey);
+        try {
+            return getService().exists(objectKey);
+        } catch (UnsupportedOperationException exception) {
+            return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
+        }
     }
 
     /**
@@ -287,7 +305,11 @@ public interface ImageApi {
             @Parameter(description = "Storage key / path of the image", required = true)
             @RequestParam String objectKey)
             throws ImageStorageException {
-        return getService().getReference(objectKey);
+        try {
+            return getService().getReference(objectKey);
+        } catch (UnsupportedOperationException exception) {
+            return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
+        }
     }
 
     /**
@@ -318,6 +340,10 @@ public interface ImageApi {
             @RequestHeader(SESSION_TOKEN_KEY) String token,
             @Parameter(description = "Key prefix to filter results (optional)")
             @RequestParam(required = false) String prefix) throws ImageStorageException {
-        return getService().list(prefix);
+        try {
+            return getService().list(prefix);
+        } catch (UnsupportedOperationException exception) {
+            return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
+        }
     }
 }

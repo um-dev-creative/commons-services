@@ -54,7 +54,7 @@ public class CloudflareR2StorageClient {
      *
      * @return the S3 client
      */
-    public S3Client getS3Client() {
+    public synchronized S3Client getS3Client() {
         if (s3Client == null) {
             s3Client = buildS3Client();
         }
