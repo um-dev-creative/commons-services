@@ -1,11 +1,12 @@
 # Changelog
+All notable changes to this project will be documented in this file.
 
-All notable changes to this project are documented in this file.
-This file follows a simple "Unreleased" top section for ongoing work and dated entries for released milestones.
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
-## [Unreleased] - 2026-04-30
+## [Unreleased] - 2026-10-05
 
 ### Added
 - **Cloudflare Images integration** (`ds-209`): new general-purpose image management API and service contracts for Cloudflare R2 / S3-compatible storage:
@@ -113,5 +114,5 @@ Legend: [x] Done, [~] In progress / conditional / requires follow-up
 
 ---
 
-_Last updated: 2026-04-30_
+_Last updated: 2026-10-05_
 
