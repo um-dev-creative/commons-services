@@ -1,18 +1,31 @@
-# PRX Commons Services
+<div align="center">
+
+<img src="docs/images/um-dev-creatives-logo.png" alt="UM Dev Creatives" width="120" />
+
+# 🧰 Commons Services
+
+**Shared Java library (JAR)** — reusable service contracts, HTTP logging, REST client configuration,
+Cloudflare R2 image storage, and configuration properties for PRX microservices.
 
 [![Qodana](https://github.com/um-dev-creative/commons-services/actions/workflows/qodana_code_quality.yml/badge.svg)](https://github.com/um-dev-creative/commons-services/actions/workflows/qodana_code_quality.yml)
+
+[![SonarQube Cloud](https://sonarcloud.io/images/project_badges/sonarcloud-light.svg)](https://sonarcloud.io/summary/new_code?id=umdc-commons-services)
+
 [![Quality gate](https://sonarcloud.io/api/project_badges/quality_gate?project=umdc-commons-services)](https://sonarcloud.io/summary/new_code?id=umdc-commons-services)
+
+[![Quality gate status](https://sonarcloud.io/api/project_badges/measure?project=umdc-commons-services&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=umdc-commons-services)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=umdc-commons-services&metric=coverage)](https://sonarcloud.io/summary/new_code?id=umdc-commons-services)
+[![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=umdc-commons-services&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=umdc-commons-services)
+[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=umdc-commons-services&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=umdc-commons-services)
 [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=umdc-commons-services&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=umdc-commons-services)
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=umdc-commons-services&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=umdc-commons-services)
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=umdc-commons-services&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=umdc-commons-services)
-[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=umdc-commons-services&metric=bugs)](https://sonarcloud.io/summary/new_code?id=umdc-commons-services)
-[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=umdc-commons-services&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=umdc-commons-services)
-[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=umdc-commons-services&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=umdc-commons-services)
-[![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=umdc-commons-services&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=umdc-commons-services)
-[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=umdc-commons-services&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=umdc-commons-services)
+[![Maintainability issues](https://sonarcloud.io/api/project_badges/measure?project=umdc-commons-services&metric=software_quality_maintainability_issues)](https://sonarcloud.io/summary/new_code?id=umdc-commons-services)
+[![Reliability issues](https://sonarcloud.io/api/project_badges/measure?project=umdc-commons-services&metric=software_quality_reliability_issues)](https://sonarcloud.io/summary/new_code?id=umdc-commons-services)
+[![Security issues](https://sonarcloud.io/api/project_badges/measure?project=umdc-commons-services&metric=software_quality_security_issues)](https://sonarcloud.io/summary/new_code?id=umdc-commons-services)
+[![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=umdc-commons-services&metric=sqale_index)](https://sonarcloud.io/summary/new_code?id=umdc-commons-services)
 
-## Technologies
+<br/>
 
 [![Java](https://img.shields.io/badge/Java-25%20LTS-blue?logo=java&style=flat-square)](https://www.oracle.com/java/)
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-4.1.1-brightgreen?logo=spring&style=flat-square)](https://spring.io/projects/spring-boot)
@@ -37,41 +50,25 @@
 [![PMD](https://img.shields.io/badge/PMD%20plugin-3.28.0-green?style=flat-square)](https://pmd.github.io/)
 [![SonarCloud](https://img.shields.io/badge/SonarCloud-detected-4E9BCF?logo=sonarcloud&style=flat-square)](https://sonarcloud.io/)
 
----
+</div>
 
-## What is this?
+Overview
+--------
+`commons-services` is a **shared library (JAR)** — not a runnable application. It provides reusable service components, interfaces, and utilities consumed by PRX microservices, and is published to the private Repsy Maven repository at `repo.repsy.io/mvn/lmata/prx`. It packages the cross-cutting concerns every PRX service needs — HTTP request/response trace logging, `RestTemplate` configuration, Cloudflare R2 image storage (AWS SDK v2 S3 client), and Spring configuration properties — so they are not duplicated across services.
 
-`commons-services` is a **shared library (JAR)** — not a runnable application. It provides reusable service components, interfaces, and utilities consumed by PRX microservices. It is published to the private Repsy Maven repository at `repo.repsy.io/mvn/lmata/prx`.
+All service interfaces use the **default-method stub** pattern: every operation returns HTTP 501 or throws `UnsupportedOperationException` until the consuming service overrides it, so consumers implement only what they need.
 
-### Purpose
+Requirements
+------------
+Minimum requirements to build and use `commons-services` locally:
+- Java 25 (JDK, LTS) or a compatible runtime (Amazon Corretto 25 recommended)
+- Maven 3.8+
+- `REPSY_ACCOUNT_USER` / `REPSY_ACCOUNT_PASSWORD` environment variables, for the private PRX artifacts (`com.umdc:commons`) and for publishing to Repsy
+- Network access to Maven Central and the Repsy repository
 
-Microservices in the PRX platform share a common set of cross-cutting concerns: HTTP request/response logging, REST client configuration, Cloudflare R2 image storage, and Spring Security properties. Rather than duplicating this logic across services, `commons-services` packages these capabilities as a single dependency that any PRX service can pull in and extend.
-
-### Design pattern
-
-All service interfaces use the **default-method stub** pattern: every operation returns HTTP 501 or throws `UnsupportedOperationException` until the consuming service overrides it. This means consumers implement only what they need, with no abstract-method obligation for unused operations.
-
----
-
-## What's inside
-
-| Component | Package | Description |
-|---|---|---|
-| `CrudService<A,T>` | `com.umdc.commons.services` | Generic CRUD contract returning `ResponseEntity`; all methods default to HTTP 501 |
-| `LoggingService` / `LoggingServiceImp` | `com.umdc.commons.services.loggers` | HTTP request/response trace logging; enabled via `prx.logging.trace.enabled` |
-| `ClientRestTemplate` | `com.umdc.commons.services.rest` | `RestTemplate` wrapper with buffered factory and Jackson converter |
-| `ImageApi` | `com.umdc.commons.services.cloudflare.controller` | Spring MVC interface for image REST endpoints (upload, download, delete, exists, reference, list) |
-| `ImageService` | `com.umdc.commons.services.cloudflare.service` | Service contract for image save/retrieve/delete operations |
-| `CloudflareR2StorageClient` | `com.umdc.commons.services.cloudflare.r2.client` | AWS SDK v2 S3 client pre-configured for Cloudflare R2 |
-| `CloudflareR2Properties` | `com.umdc.commons.services.cloudflare.properties` | `@ConfigurationProperties` for `cloudflare.r2.*` settings |
-| `StoreProperties` / `ManagementAuthenticatorProperties` | `com.umdc.commons.services.cloudflare.properties` | Keystore/truststore and management authenticator config |
-| `DiscoveryClientProperties` | `com.umdc.commons.services.properties` | Eureka/discovery client settings |
-
----
-
-## Using this library
-
-### Maven coordinates
+Using this library
+------------------
+Maven coordinates:
 
 ```xml
 <dependency>
@@ -81,9 +78,7 @@ All service interfaces use the **default-method stub** pattern: every operation 
 </dependency>
 ```
 
-### Repository
-
-The artifact is published to a private Repsy repository. Add it to your `pom.xml` or `settings.xml`:
+Repository (add to your `pom.xml` or `settings.xml`):
 
 ```xml
 <repository>
@@ -92,11 +87,7 @@ The artifact is published to a private Repsy repository. Add it to your `pom.xml
 </repository>
 ```
 
-Set the `REPSY_ACCOUNT_USER` and `REPSY_ACCOUNT_PASSWORD` environment variables for authentication.
-
-### Minimum configuration (Cloudflare R2)
-
-If your service uses image storage, add the following to `application.yml`:
+Minimum configuration for Cloudflare R2 image storage (`application.yml`):
 
 ```yaml
 cloudflare:
@@ -109,7 +100,7 @@ cloudflare:
     public-url: https://<custom-domain-or-r2-dev-url>  # optional
 ```
 
-For enabling trace logging:
+Enable HTTP trace logging:
 
 ```yaml
 prx:
@@ -118,11 +109,9 @@ prx:
       enabled: true
 ```
 
----
-
-## Building locally
-
-**Requirements:** JDK 25 (LTS), Maven 3.8+, network access to Maven Central and the Repsy repository.
+Quick build
+-----------
+This project uses Maven. From the repository root:
 
 ```bash
 # Full build: compile, test, PMD check, JaCoCo coverage verification
@@ -134,11 +123,11 @@ mvn -DskipITs clean verify
 # Run unit tests only (no coverage enforcement)
 mvn test
 
-# If Byte Buddy/Mockito fails with Java compatibility errors
-mvn -Dnet.bytebuddy.experimental=true -DskipITs clean test
+# Run a single test class
+mvn test -Dtest=LoggingServiceImpTest
 ```
 
-### Quality gates
+Quality gates (enforced at build time):
 
 | Gate | Tool | Threshold |
 |---|---|---|
@@ -148,63 +137,78 @@ mvn -Dnet.bytebuddy.experimental=true -DskipITs clean test
 
 Coverage is excluded from `**/config/*`, `**/loggers/*`, `**/loggers/interceptor/*`, and `**/mapper/*`.
 
----
+Known issues and workarounds
+-----------------------------
+1. **Byte Buddy / Mockito + Java 25**
+   - Symptom: tests fail with `Java 25 (69) is not supported by the current version of Byte Buddy`.
+   - Workaround: `mvn -Dnet.bytebuddy.experimental=true -DskipITs clean test`.
+   - Long-term fix: upgrade `net.bytebuddy` and `org.mockito` to versions with explicit Java 25 support.
 
-## Continuous Integration
+2. **Repsy authentication failures when resolving `com.umdc:commons`**
+   - Symptom: `401`/`Could not transfer artifact` during dependency resolution.
+   - Workaround: export `REPSY_ACCOUNT_USER` and `REPSY_ACCOUNT_PASSWORD` before running Maven.
 
-CI runs on a JDK 25 runner. Recommended pipeline:
+3. **Transitive dependency vulnerability warnings from IDE/Dependabot**
+   - Workaround: pin the vulnerable artifact via a `<properties>` entry named `<lib>.version` plus a matching override in `<dependencyManagement>` — see `jackson.databind.version`, `jackson3.version`, `logback.version`, `apache.tomcat.version` in `pom.xml`. Verify with `mvn dependency:tree -Dincludes=<groupId>:<artifactId>`.
 
-1. Checkout repository
-2. Install JDK 25
-3. `mvn -DskipITs clean verify` — unit tests + quality gates
-4. `mvn -P integration-tests verify` — integration tests (separate job)
-5. Dependency CVE scan (Dependabot, Snyk, or equivalent)
+4. **Sonar coverage thresholds fail locally but not in CI, or vice versa**
+   - Workaround: run `mvn -DskipITs clean verify` first so the JaCoCo XML report exists at `target/site/jacoco/jacoco.xml` before invoking `sonar:sonar`.
 
----
+Continuous Integration
+-----------------------
+CI runs on GitHub Actions (`.github/workflows/`) with a JDK 25 runner:
+- **`ci.yml` / `build.yml`** — `mvn -B -V -e clean verify` (unit tests + PMD + JaCoCo quality gates)
+- **`qodana_code_quality.yml`** — JetBrains Qodana static analysis
 
-## Verifying Sonar coverage locally
+## How to verify Sonar coverage locally
 
-```bash
-# 1. Generate JaCoCo XML report
-mvn -DskipITs clean verify
+1) Generate the JaCoCo XML report (runs tests and produces XML/HTML reports):
+   ```bash
+   mvn -DskipITs clean verify
+   ```
 
-# 2. Run Sonar analysis
-mvn sonar:sonar -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=<SONAR_TOKEN>
-```
+2) Confirm the JaCoCo XML report exists at the path `pom.xml` configures:
+   ```bash
+   test -f target/site/jacoco/jacoco.xml && echo "report present"
+   ```
 
-The report is written to `target/site/jacoco/jacoco.xml`. `pom.xml` already sets `sonar.coverage.jacoco.xmlReportPaths` to that path.
+3) Run Sonar analysis locally (requires a Sonar token):
+   ```bash
+   mvn sonar:sonar -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=<SONAR_TOKEN>
+   ```
 
----
-
-## Known issues
-
-**Byte Buddy / Mockito + Java 25** — Tests may fail with `"Java 25 (69) is not supported by the current version of Byte Buddy"`. Workaround:
-
-```bash
-mvn -Dnet.bytebuddy.experimental=true -DskipITs clean test
-```
-
-Long-term fix: upgrade `net.bytebuddy` and `org.mockito` to versions with explicit Java 25 support.
-
----
+Notes:
+- `pom.xml` sets `sonar.coverage.jacoco.xmlReportPaths` to `target/site/jacoco/jacoco.xml` and scopes `sonar.inclusions`/`sonar.coverage.inclusions` to `src/main/java/**/*.java`, excluding config/logger/mapper code from coverage accounting.
 
 ## Documentation
 
-| Document | Description |
-|---|---|
-| [docs/image-api-implementation-guide.md](docs/image-api-implementation-guide.md) | How to implement `ImageApi` and `ImageService` in a consuming service |
-| [docs/cloudflare-r2-integration.md](docs/cloudflare-r2-integration.md) | Low-level `CloudflareR2StorageClient` configuration and R2 quirks |
-| [docs/architecture.md](docs/architecture.md) | Component architecture and how this library fits the PRX platform |
-| [docs/configuration.md](docs/configuration.md) | All supported configuration properties |
-| [docs/api-reference.md](docs/api-reference.md) | REST API reference for all exposed endpoints |
-| [CHANGELOG.md](CHANGELOG.md) | Project changelog and migration notes |
+- `CHANGELOG.md` — project changelog and migration notes (Keep a Changelog / SemVer)
+- `CLAUDE.md` — architecture, core abstractions, build and quality-gate notes
+- [docs/architecture.md](docs/architecture.md) — component architecture and how this library fits the PRX platform
+- [docs/components.md](docs/components.md) — component catalogue
+- [docs/configuration.md](docs/configuration.md) — all supported configuration properties
+- [docs/api-reference.md](docs/api-reference.md) — REST API reference for all exposed endpoints
+- [docs/image-api-implementation-guide.md](docs/image-api-implementation-guide.md) — how to implement `ImageApi` and `ImageService` in a consuming service
+- [docs/cloudflare-r2-integration.md](docs/cloudflare-r2-integration.md) — `CloudflareR2StorageClient` configuration and R2 quirks
+- [docs/logging-subsystem.md](docs/logging-subsystem.md) — logging interceptors and trace logging
+- `LICENSE` — proprietary, all rights reserved (see below)
 
----
+Components
+----------
+| Component | Package | Purpose |
+|---|---|---|
+| `CrudService<A,T>` | `com.umdc.commons.services` | Generic CRUD contract returning `ResponseEntity`; all methods default to HTTP 501 |
+| `LoggingService` / `LoggingServiceImp` | `com.umdc.commons.services.loggers` | HTTP request/response trace logging; enabled via `prx.logging.trace.enabled` |
+| `ClientRestTemplate` | `com.umdc.commons.services.rest` | `RestTemplate` wrapper with buffered factory and Jackson converter |
+| `ImageApi` | `com.umdc.commons.services.cloudflare.controller` | Spring MVC interface for image REST endpoints (upload, download, delete, exists, reference, list) |
+| `ImageService` | `com.umdc.commons.services.cloudflare.service` | Service contract for image save/retrieve/delete operations |
+| `CloudflareR2StorageClient` | `com.umdc.commons.services.cloudflare.r2.client` | AWS SDK v2 S3 client pre-configured for Cloudflare R2 |
+| `CloudflareR2Properties` | `com.umdc.commons.services.cloudflare.properties` | `@ConfigurationProperties` for `cloudflare.r2.*` |
+| `StoreProperties` / `ManagementAuthenticatorProperties` | `com.umdc.commons.services.cloudflare.properties` | Keystore/truststore and management authenticator config |
+| `DiscoveryClientProperties` | `com.umdc.commons.services.properties` | Eureka/discovery client settings |
 
-## Tech stack and versions
-
-Versions below are taken from `pom.xml` (properties and parent).
-
+Tech stack and versions
+-----------------------
 | Technology | Version | Source |
 |---|--------------:|---|
 | Java (language / runtime) | 25 | pom.xml |
@@ -234,21 +238,23 @@ Versions below are taken from `pom.xml` (properties and parent).
 | PMD (Maven plugin) | 3.28.0 | pom.xml |
 | SonarCloud (project properties present) | detected | pom.xml |
 
-Files scanned: `pom.xml`, `.github/workflows/*.yml` (CI uses JDK 25).
+Note: "detected" means the technology is present but there is no single pinned version string to extract.
 
----
+Files scanned
+-------------
+- `pom.xml` — project metadata, properties, dependencies, plugin versions
+- `.github/workflows/*.yml` — CI pipeline (JDK 25, Qodana)
+- `CLAUDE.md` — project architecture and conventions
 
-## Contributing
+License
+-------
+Proprietary and confidential — Copyright (c) 2024-2026 UM Dev Creative. All Rights Reserved. See
+`LICENSE` for the full terms; this is not open-source software.
 
-When opening pull requests:
+More
+----
+For architecture and convention details, see `CLAUDE.md`. For questions, reach out to:
 
-- Add or update unit/integration tests for functional changes
-- Ensure `mvn -DskipITs clean verify` passes locally with JDK 25
-- Update the changelog and relevant docs
+<luis.antonio.mata@gmail.com>
 
----
-
-## License
-
-See the `LICENSE` file in the repository root for license details.
-
+[![SonarQube Cloud](https://sonarcloud.io/images/project_badges/sonarcloud-light.svg)](https://sonarcloud.io/summary/new_code?id=umdc-commons-services)
