@@ -12,7 +12,30 @@
 [![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=umdc-commons-services&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=umdc-commons-services)
 [![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=umdc-commons-services&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=umdc-commons-services)
 
-![Java](https://img.shields.io/badge/Java-21-green?logo=java&style=flat-square) ![Maven](https://img.shields.io/badge/Maven-3.8-lightgrey?logo=apachemaven&style=flat-square) ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.5.8-green?logo=springboot&style=flat-square) ![Spring Cloud](https://img.shields.io/badge/Spring%20Cloud-2025.0.1-green?logo=spring&style=flat-square) ![JUnit](https://img.shields.io/badge/JUnit-5.14.1-green?logo=junit&style=flat-square) ![Mockito](https://img.shields.io/badge/Mockito-5.21.0-green?style=flat-square) ![JaCoCo](https://img.shields.io/badge/JaCoCo-0.8.14-green?style=flat-square) ![PMD](https://img.shields.io/badge/PMD-3.28.0-green?style=flat-square)
+## Technologies
+
+[![Java](https://img.shields.io/badge/Java-25%20LTS-blue?logo=java&style=flat-square)](https://www.oracle.com/java/)
+[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-4.1.1-brightgreen?logo=spring&style=flat-square)](https://spring.io/projects/spring-boot)
+[![Spring Cloud](https://img.shields.io/badge/Spring%20Cloud-2025.1.3-brightgreen?logo=spring&style=flat-square)](https://spring.io/projects/spring-cloud)
+[![Maven](https://img.shields.io/badge/Maven->=3.8-red?logo=apachemaven&style=flat-square)](https://maven.apache.org/)
+[![AWS SDK](https://img.shields.io/badge/AWS%20SDK%20S3-2.54.5-orange?logo=amazonaws&style=flat-square)](https://aws.amazon.com/sdk-for-java/)
+[![Cloudflare R2](https://img.shields.io/badge/Cloudflare%20R2-object%20storage-orange?logo=cloudflare&style=flat-square)](https://developers.cloudflare.com/r2/)
+[![MapStruct](https://img.shields.io/badge/MapStruct-1.6.3-blue?logo=mapstruct&style=flat-square)](https://mapstruct.org/)
+[![PRX Commons](https://img.shields.io/badge/PRX%20Commons-0.0.3-blue?style=flat-square)](https://repo.repsy.io/mvn/lmata/prx)
+[![Spring Framework](https://img.shields.io/badge/Spring%20Framework-7.0.8-brightgreen?logo=spring&style=flat-square)](https://spring.io/projects/spring-framework)
+[![Jackson 2.x](https://img.shields.io/badge/Jackson%202.x-2.22.3-blue?style=flat-square)](https://github.com/FasterXML/jackson)
+[![Jackson 3.x](https://img.shields.io/badge/Jackson%203.x-3.2.3-blue?style=flat-square)](https://github.com/FasterXML/jackson)
+[![Logback](https://img.shields.io/badge/Logback-1.6.5-blue?style=flat-square)](https://logback.qos.ch/)
+[![Log4j](https://img.shields.io/badge/Log4j-2.26.1-blue?logo=apache&style=flat-square)](https://logging.apache.org/log4j/)
+[![Springdoc OpenAPI](https://img.shields.io/badge/Springdoc%20OpenAPI-3.1.0-brightgreen?logo=openapiinitiative&style=flat-square)](https://springdoc.org/)
+[![Gson](https://img.shields.io/badge/Gson-2.14.0-blue?style=flat-square)](https://github.com/google/gson)
+[![Netty](https://img.shields.io/badge/Netty-4.2.18.Final-blue?style=flat-square)](https://netty.io/)
+[![Tomcat Embed](https://img.shields.io/badge/Tomcat%20Embed-11.0.26-orange?logo=apachetomcat&style=flat-square)](https://tomcat.apache.org/)
+[![JUnit](https://img.shields.io/badge/JUnit-6.1.3-red?logo=junit&style=flat-square)](https://junit.org/)
+[![Mockito](https://img.shields.io/badge/Mockito-5.21.0-red?logo=mockito&style=flat-square)](https://site.mockito.org/)
+[![JaCoCo](https://img.shields.io/badge/JaCoCo-0.8.15-green?style=flat-square)](https://www.jacoco.org/)
+[![PMD](https://img.shields.io/badge/PMD%20plugin-3.28.0-green?style=flat-square)](https://pmd.github.io/)
+[![SonarCloud](https://img.shields.io/badge/SonarCloud-detected-4E9BCF?logo=sonarcloud&style=flat-square)](https://sonarcloud.io/)
 
 ---
 
@@ -34,14 +57,15 @@ All service interfaces use the **default-method stub** pattern: every operation 
 
 | Component | Package | Description |
 |---|---|---|
-| `CrudService<A,T>` | `com.prx.commons.services` | Generic CRUD contract returning `ResponseEntity`; all methods default to HTTP 501 |
+| `CrudService<A,T>` | `com.umdc.commons.services` | Generic CRUD contract returning `ResponseEntity`; all methods default to HTTP 501 |
 | `LoggingService` / `LoggingServiceImp` | `com.umdc.commons.services.loggers` | HTTP request/response trace logging; enabled via `prx.logging.trace.enabled` |
 | `ClientRestTemplate` | `com.umdc.commons.services.rest` | `RestTemplate` wrapper with buffered factory and Jackson converter |
 | `ImageApi` | `com.umdc.commons.services.cloudflare.controller` | Spring MVC interface for image REST endpoints (upload, download, delete, exists, reference, list) |
 | `ImageService` | `com.umdc.commons.services.cloudflare.service` | Service contract for image save/retrieve/delete operations |
 | `CloudflareR2StorageClient` | `com.umdc.commons.services.cloudflare.r2.client` | AWS SDK v2 S3 client pre-configured for Cloudflare R2 |
 | `CloudflareR2Properties` | `com.umdc.commons.services.cloudflare.properties` | `@ConfigurationProperties` for `cloudflare.r2.*` settings |
-| `SecurityProperties` | `com.prx.commons.services` | Keystore, truststore, and management authenticator config |
+| `StoreProperties` / `ManagementAuthenticatorProperties` | `com.umdc.commons.services.cloudflare.properties` | Keystore/truststore and management authenticator config |
+| `DiscoveryClientProperties` | `com.umdc.commons.services.properties` | Eureka/discovery client settings |
 
 ---
 
@@ -51,9 +75,9 @@ All service interfaces use the **default-method stub** pattern: every operation 
 
 ```xml
 <dependency>
-    <groupId>com.prx</groupId>
+    <groupId>com.umdc</groupId>
     <artifactId>commons-services</artifactId>
-    <version>0.0.2</version>
+    <version>0.0.3</version>
 </dependency>
 ```
 
@@ -98,7 +122,7 @@ prx:
 
 ## Building locally
 
-**Requirements:** JDK 21, Maven 3.8+, network access to Maven Central and the Repsy repository.
+**Requirements:** JDK 25 (LTS), Maven 3.8+, network access to Maven Central and the Repsy repository.
 
 ```bash
 # Full build: compile, test, PMD check, JaCoCo coverage verification
@@ -128,10 +152,10 @@ Coverage is excluded from `**/config/*`, `**/loggers/*`, `**/loggers/interceptor
 
 ## Continuous Integration
 
-CI runs on a JDK 21 runner. Recommended pipeline:
+CI runs on a JDK 25 runner. Recommended pipeline:
 
 1. Checkout repository
-2. Install JDK 21
+2. Install JDK 25
 3. `mvn -DskipITs clean verify` — unit tests + quality gates
 4. `mvn -P integration-tests verify` — integration tests (separate job)
 5. Dependency CVE scan (Dependabot, Snyk, or equivalent)
@@ -154,13 +178,13 @@ The report is written to `target/site/jacoco/jacoco.xml`. `pom.xml` already sets
 
 ## Known issues
 
-**Byte Buddy / Mockito + Java 21** — Tests may fail with `"Java 21 (61) not supported"`. Workaround:
+**Byte Buddy / Mockito + Java 25** — Tests may fail with `"Java 25 (69) is not supported by the current version of Byte Buddy"`. Workaround:
 
 ```bash
 mvn -Dnet.bytebuddy.experimental=true -DskipITs clean test
 ```
 
-Long-term fix: upgrade `net.bytebuddy` and `org.mockito` to versions with explicit Java 21 support.
+Long-term fix: upgrade `net.bytebuddy` and `org.mockito` to versions with explicit Java 25 support.
 
 ---
 
@@ -173,7 +197,44 @@ Long-term fix: upgrade `net.bytebuddy` and `org.mockito` to versions with explic
 | [docs/architecture.md](docs/architecture.md) | Component architecture and how this library fits the PRX platform |
 | [docs/configuration.md](docs/configuration.md) | All supported configuration properties |
 | [docs/api-reference.md](docs/api-reference.md) | REST API reference for all exposed endpoints |
-| CHANGELOG.md | Project changelog and migration notes |
+| [CHANGELOG.md](CHANGELOG.md) | Project changelog and migration notes |
+
+---
+
+## Tech stack and versions
+
+Versions below are taken from `pom.xml` (properties and parent).
+
+| Technology | Version | Source |
+|---|--------------:|---|
+| Java (language / runtime) | 25 | pom.xml |
+| Spring Boot (parent) | 4.1.1 | pom.xml |
+| Spring Cloud | 2025.1.3 | pom.xml |
+| Spring Core | 7.0.8 | pom.xml |
+| Maven (build tool) | >=3.8 | pom.xml |
+| PRX Commons (`com.umdc:commons`) | 0.0.3 | pom.xml |
+| AWS SDK v2 (S3, used for Cloudflare R2) | 2.54.5 | pom.xml |
+| MapStruct | 1.6.3 | pom.xml |
+| Jackson 2.x (databind / jsr310) | 2.22.3 | pom.xml |
+| Jackson 2.x annotations | 2.22 | pom.xml |
+| Jackson 3.x (`tools.jackson`) | 3.2.3 | pom.xml |
+| Logback | 1.6.5 | pom.xml |
+| Log4j | 2.26.1 | pom.xml |
+| Google Gson | 2.14.0 | pom.xml |
+| Springdoc OpenAPI | 3.1.0 | pom.xml |
+| Netty | 4.2.18.Final | pom.xml |
+| Apache Tomcat Embed (provided) | 11.0.26 | pom.xml |
+| ASM | 9.8 | pom.xml |
+| JUnit Jupiter | 6.1.3 | pom.xml |
+| Mockito | 5.21.0 | pom.xml |
+| Maven Compiler Plugin | 3.14.1 | pom.xml |
+| Maven Surefire Plugin | 3.5.6 | pom.xml |
+| Maven Javadoc Plugin | 3.12.0 | pom.xml |
+| JaCoCo (Maven plugin) | 0.8.15 | pom.xml |
+| PMD (Maven plugin) | 3.28.0 | pom.xml |
+| SonarCloud (project properties present) | detected | pom.xml |
+
+Files scanned: `pom.xml`, `.github/workflows/*.yml` (CI uses JDK 25).
 
 ---
 
@@ -182,7 +243,7 @@ Long-term fix: upgrade `net.bytebuddy` and `org.mockito` to versions with explic
 When opening pull requests:
 
 - Add or update unit/integration tests for functional changes
-- Ensure `mvn -DskipITs clean verify` passes locally with JDK 21
+- Ensure `mvn -DskipITs clean verify` passes locally with JDK 25
 - Update the changelog and relevant docs
 
 ---
