@@ -24,7 +24,7 @@ graph TD
         end
 
         subgraph Config
-            JC["JacksonConfig\n@Configuration · ObjectMapper bean"]
+            JC["JacksonConfig\n@Configuration · Jackson 3 ObjectMapper bean"]
             MC["MapperAppConfig\n@MapperConfig · MapStruct base"]
             PU["PrinterUtil\n@Service · conditional logger"]
         end

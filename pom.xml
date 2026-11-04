@@ -67,11 +67,12 @@ IMPORTANTE CONSIDERAR:
         <rewrite.plugin.version>5.42.0</rewrite.plugin.version>
         <rewrite.recipe.version>5.21.0</rewrite.recipe.version>
         <aws.sdk.version>2.54.5</aws.sdk.version>
-        <apache.tomcat.version>11.0.26</apache.tomcat.version>
+        <apache.tomcat.version>11.0.27</apache.tomcat.version>
         <jackson.annotations.version>2.22</jackson.annotations.version>
-        <jackson3.version>3.2.3</jackson3.version>
+        <jackson3.version>3.2.4</jackson3.version>
         <logback.version>1.6.5</logback.version>
-        <jackson.databind.version>2.22.3</jackson.databind.version>
+        <hibernate.validator.version>9.1.6.Final</hibernate.validator.version>
+        <jackson.databind.version>2.22.4</jackson.databind.version>
         <google.gson.version>2.14.0</google.gson.version>
         <springdoc.openapi.version>3.1.0</springdoc.openapi.version>
 
@@ -136,10 +137,11 @@ IMPORTANTE CONSIDERAR:
             <artifactId>s3</artifactId>
             <version>${aws.sdk.version}</version>
         </dependency>
+        <!-- Jackson 3.x (tools.jackson): java.time support is built into jackson-databind, no jsr310 module needed -->
         <dependency>
-            <groupId>com.fasterxml.jackson.datatype</groupId>
-            <artifactId>jackson-datatype-jsr310</artifactId>
-            <version>${jackson.databind.version}</version>
+            <groupId>tools.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson3.version}</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/jakarta.servlet/jakarta.servlet-api -->
         <dependency>
@@ -211,6 +213,11 @@ IMPORTANTE CONSIDERAR:
                 <version>${jackson3.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.hibernate.validator</groupId>
+                <artifactId>hibernate-validator</artifactId>
+                <version>${hibernate.validator.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework.cloud</groupId>

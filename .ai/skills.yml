@@ -215,7 +215,7 @@ skills:
       - src/main/java/com/umdc/commons/services/rest/ClientRestTemplate.java
     guardrails:
       - Always use BufferingClientHttpRequestFactory — not SimpleClientHttpRequestFactory directly.
-      - MappingJackson2HttpMessageConverter MUST be supplied via constructor injection.
+      - JacksonJsonHttpMessageConverter MUST be supplied via constructor injection.
       - Supported media type MUST include APPLICATION_JSON at minimum.
     examples:
       - src/main/java/com/umdc/commons/services/rest/ClientRestTemplate.java
@@ -225,12 +225,12 @@ skills:
   # ---------------------------------------------------------------------------
   - id: jackson-configuration
     intent: >
-      Configure Jackson ObjectMapper with JavaTimeModule so that Java 8+
+      Configure a Jackson 3.x (tools.jackson) ObjectMapper so that Java 8+
       date/time types serialize and deserialize correctly.
     applies_to:
       - src/main/java/com/umdc/commons/services/config/mapper/JacksonConfig.java
     guardrails:
-      - Always register JavaTimeModule on the ObjectMapper bean.
+      - Use tools.jackson.databind types (JsonMapper); java.time support is built in, no JavaTimeModule needed.
       - The ObjectMapper bean MUST be a @Bean in a @Configuration class.
     examples:
       - src/main/java/com/umdc/commons/services/config/mapper/JacksonConfig.java

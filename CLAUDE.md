@@ -48,7 +48,7 @@ The library uses an **interface-with-default-methods** pattern throughout. Consu
 | `CrudService<A,T>` | `com.prx.commons.services` | Generic CRUD contract returning `ResponseEntity`; all methods default to HTTP 501 |
 | `LoggingService` | `com.umdc.commons.services.loggers` | HTTP request/response logging contract |
 | `LoggingServiceImp` | `com.umdc.commons.services.loggers` | Concrete logging implementation; enabled via `prx.logging.trace.enabled` |
-| `ClientRestTemplate` | `com.umdc.commons.services.rest` | `RestTemplate` wrapper with buffered factory and Jackson converter |
+| `ClientRestTemplate` | `com.umdc.commons.services.rest` | `RestTemplate` wrapper with buffered factory and Jackson 3.x converter (`JacksonJsonHttpMessageConverter`) |
 | `ProfileImageApi` | `com.umdc.commons.services.cloudflare.controller` | Spring MVC interface for profile image REST endpoints; default methods return 501 |
 | `ProfileImageService` | `com.umdc.commons.services.cloudflare.service` | Service contract for profile image save/retrieve operations |
 | `CloudflareR2StorageClient` | `com.umdc.commons.services.cloudflare.r2.client` | AWS SDK v2 S3 client configured for Cloudflare R2 (path-style, chunked encoding disabled) |

@@ -232,7 +232,7 @@ Sensitive variables MUST be supplied via CI secrets or `.env.local`. Never commi
 com.prx.commons.services
 ├── CrudService<A,T>              Generic CRUD contract (HTTP 501 defaults)
 ├── config/mapper/
-│   ├── JacksonConfig             ObjectMapper + JavaTimeModule bean
+│   ├── JacksonConfig             Jackson 3.x ObjectMapper bean
 │   └── MapperAppConfig           MapStruct base config (@MapperConfig)
 ├── loggers/
 │   ├── LoggingService            HTTP logging contract

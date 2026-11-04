@@ -35,8 +35,9 @@ class StorePropertiesTest {
     @Test
     @DisplayName("setPassword / getPassword round-trip")
     void passwordRoundTrip() {
-        props.setPassword("s3cr3t");
-        assertEquals("s3cr3t", props.getPassword());
+        String testPassword = System.getenv().getOrDefault("TEST_STORE_PASSWORD", "s3cr3t");
+        props.setPassword(testPassword);
+        assertEquals(testPassword, props.getPassword());
     }
 
     @Test

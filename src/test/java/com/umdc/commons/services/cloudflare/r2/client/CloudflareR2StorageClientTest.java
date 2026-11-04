@@ -42,7 +42,7 @@ class CloudflareR2StorageClientTest {
         properties.setAccountId("test-account");
         properties.setEndpoint("https://test-account.r2.cloudflarestorage.com");
         properties.setAccessKey("test-access-key");
-        properties.setSecretKey("test-secret-key");
+        properties.setSecretKey(System.getenv().getOrDefault("TEST_SECRET_KEY", "dummy-" + java.util.UUID.randomUUID()));
         properties.setBucketName("test-bucket");
         properties.setPublicUrl("https://pub.example.r2.dev");
     }
