@@ -199,7 +199,7 @@ Components
 |---|---|---|
 | `CrudService<A,T>` | `com.umdc.commons.services` | Generic CRUD contract returning `ResponseEntity`; all methods default to HTTP 501 |
 | `LoggingService` / `LoggingServiceImp` | `com.umdc.commons.services.loggers` | HTTP request/response trace logging; enabled via `prx.logging.trace.enabled` |
-| `ClientRestTemplate` | `com.umdc.commons.services.rest` | `RestTemplate` wrapper with buffered factory and Jackson converter |
+| `ClientRestTemplate` | `com.umdc.commons.services.rest` | `RestTemplate` wrapper with buffered factory and Jackson 3.x converter |
 | `ImageApi` | `com.umdc.commons.services.cloudflare.controller` | Spring MVC interface for image REST endpoints (upload, download, delete, exists, reference, list) |
 | `ImageService` | `com.umdc.commons.services.cloudflare.service` | Service contract for image save/retrieve/delete operations |
 | `CloudflareR2StorageClient` | `com.umdc.commons.services.cloudflare.r2.client` | AWS SDK v2 S3 client pre-configured for Cloudflare R2 |
@@ -219,9 +219,8 @@ Tech stack and versions
 | PRX Commons (`com.umdc:commons`) | 0.0.3 | pom.xml |
 | AWS SDK v2 (S3, used for Cloudflare R2) | 2.54.5 | pom.xml |
 | MapStruct | 1.6.3 | pom.xml |
-| Jackson 2.x (databind / jsr310) | 2.22.3 | pom.xml |
-| Jackson 2.x annotations | 2.22 | pom.xml |
-| Jackson 3.x (`tools.jackson`) | 3.2.3 | pom.xml |
+| Jackson 3.x (`tools.jackson` databind, direct) | 3.2.3 | pom.xml |
+| Jackson 2.x (transitive: annotations, springdoc) | 2.22.x | pom.xml (BOM pin) |
 | Logback | 1.6.5 | pom.xml |
 | Log4j | 2.26.1 | pom.xml |
 | Google Gson | 2.14.0 | pom.xml |

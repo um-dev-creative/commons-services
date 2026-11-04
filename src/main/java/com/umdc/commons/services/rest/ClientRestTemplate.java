@@ -18,7 +18,7 @@ import org.springframework.http.client.BufferingClientHttpRequestFactory;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.http.converter.json.JacksonJsonHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
@@ -28,7 +28,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 /**
  * RestTemplate wrapper that configures a {@link RestTemplate} with a provided
- * {@link MappingJackson2HttpMessageConverter} and default settings (buffering, message converters).
+ * {@link JacksonJsonHttpMessageConverter} and default settings (buffering, message converters).
  *
  * <p>Uses {@link BufferingClientHttpRequestFactory} so that request/response bodies can be
  * read multiple times by the logging interceptors.
@@ -36,18 +36,17 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
  * @since 21
  * @version 0.0.1
  */
-@SuppressWarnings({"deprecation", "removal"})
 public class ClientRestTemplate {
 
-    protected final MappingJackson2HttpMessageConverter messageConverter;
+    protected final JacksonJsonHttpMessageConverter messageConverter;
     protected RestTemplate restTemplate;
 
     /**
      * Constructs the client with the provided Jackson message converter and initializes the RestTemplate.
      *
-     * @param messageConverter the Jackson 2.x message converter to use
+     * @param messageConverter the Jackson 3.x message converter to use
      */
-    public ClientRestTemplate(MappingJackson2HttpMessageConverter messageConverter) {
+    public ClientRestTemplate(JacksonJsonHttpMessageConverter messageConverter) {
         this.messageConverter = messageConverter;
         init();
     }

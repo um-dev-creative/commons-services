@@ -19,7 +19,7 @@ class ImageApiTest {
     };
 
     private static final String TOKEN = "test-token";
-    private static final String KEY = "profiles/user1/avatar.jpg";
+    private static final String KEY = System.getProperty("test.object.key", "profiles/user1/avatar.jpg");
     private static final byte[] IMAGE = new byte[]{1, 2, 3};
 
     @Test

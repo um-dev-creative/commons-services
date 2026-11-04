@@ -17,7 +17,7 @@
 | Cloud Storage | AWS SDK v2 (S3-compatible) | 2.21.0 |
 | API Documentation | SpringDoc OpenAPI | 1.8.0 |
 | Logging | Log4j2 | 2.25.3 |
-| JSON | Jackson + Gson | managed |
+| JSON | Jackson 3.x (`tools.jackson`) + Gson | managed |
 | Testing | JUnit Jupiter + Mockito | 5.14.1 / 5.21.0 |
 | Coverage | JaCoCo | 0.8.14 |
 | Static Analysis | PMD | 3.28.0 |
@@ -31,7 +31,7 @@ com.prx.commons.services
 ├── CrudService<A,T>                      # Generic CRUD contract
 ├── config/
 │   └── mapper/
-│       ├── JacksonConfig                 # ObjectMapper with JavaTimeModule
+│       ├── JacksonConfig                 # Jackson 3 ObjectMapper (java.time built in)
 │       └── MapperAppConfig               # Base MapStruct configuration
 ├── loggers/
 │   ├── LoggingService                    # HTTP logging contract
@@ -113,7 +113,7 @@ graph TD
         subgraph cfg["Configuration"]
             SecProps["SecurityProperties\nprx.security.*"]
             DiscProps["DiscoveryClientProperties\nsecurity.discovery.client.*"]
-            JacksonConf["JacksonConfig\nObjectMapper bean"]
+            JacksonConf["JacksonConfig\nJackson 3 ObjectMapper bean"]
             MapperConf["MapperAppConfig\nMapStruct base"]
         end
     end

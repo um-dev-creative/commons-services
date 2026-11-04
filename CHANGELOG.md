@@ -6,6 +6,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [Unreleased] - 2026-11-03
+
+### Changed
+- **Migration from Jackson 2.x to Jackson 3.x (`tools.jackson`)**:
+  - **BREAKING** — `ClientRestTemplate` constructor and `messageConverter` field now use `org.springframework.http.converter.json.JacksonJsonHttpMessageConverter` instead of the deprecated `MappingJackson2HttpMessageConverter`. Consumers must inject the new converter type; the `@SuppressWarnings` workaround was removed.
+  - **BREAKING** — `JacksonConfig.objectMapper()` now returns `tools.jackson.databind.ObjectMapper`, created with `JsonMapper.builder().build()`. `JavaTimeModule` registration was removed because `java.time` support is built into jackson-databind 3.x.
+  - `pom.xml`: replaced `com.fasterxml.jackson.datatype:jackson-datatype-jsr310` with `tools.jackson.core:jackson-databind` (`${jackson3.version}`). The Jackson 2.x BOM pin is kept only for transitive consumers (`jackson-annotations` 2.x remains the annotation package in Jackson 3; springdoc still brings Jackson 2 modules).
+  - Tests updated (`ClientRestTemplateTest`, `JacksonConfigTest`) and a `java.time` round-trip test added.
+  - Documentation and AI guidance files updated to reflect Jackson 3.x.
+
+### Security
+- Resolved Snyk open-source findings by bumping `tomcat-embed-core` to 11.0.27, `tools.jackson` jackson-databind to 3.2.4, `com.fasterxml.jackson` jackson-databind to 2.22.4, and pinning `hibernate-validator` to 9.1.6.Final via `dependencyManagement`.
+- Removed hardcoded credentials flagged by Snyk Code from test sources.
+
+### Fixed
+- `CloudflareR2StorageClientTest` no longer fails when `TEST_SECRET_KEY` is unset (falls back to a random dummy value).
+
 ## [Unreleased] - 2026-10-05
 
 ### Added

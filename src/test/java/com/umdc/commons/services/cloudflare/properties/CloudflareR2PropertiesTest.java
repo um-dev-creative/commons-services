@@ -4,6 +4,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.UUID;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
@@ -52,8 +54,9 @@ class CloudflareR2PropertiesTest {
     @Test
     @DisplayName("setSecretKey / getSecretKey round-trip")
     void secretKeyRoundTrip() {
-        props.setSecretKey("secret-key");
-        assertEquals("secret-key", props.getSecretKey());
+        String generatedSecret = UUID.randomUUID().toString();
+        props.setSecretKey(generatedSecret);
+        assertEquals(generatedSecret, props.getSecretKey());
     }
 
     @Test

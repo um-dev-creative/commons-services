@@ -28,7 +28,7 @@ bindings, and utilities consumed by other parts of the library.
 
 ## Tech Stack Expertise
 - Spring RestTemplate + BufferingClientHttpRequestFactory
-- MappingJackson2HttpMessageConverter + Jackson ObjectMapper + JavaTimeModule
+- JacksonJsonHttpMessageConverter + Jackson 3.x (tools.jackson) ObjectMapper
 - MapStruct @Mapper with MapperAppConfig base configuration
 - @ConfigurationProperties classes with explicit getters/setters (no Lombok)
 - PrinterUtil conditional debug logging via @Value("${log.debug}")

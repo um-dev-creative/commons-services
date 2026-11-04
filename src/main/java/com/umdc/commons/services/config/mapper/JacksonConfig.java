@@ -1,13 +1,14 @@
 package com.umdc.commons.services.config.mapper;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
  * Configuration class for Jackson.
- * Configures an {@link ObjectMapper} to support Java date/time types by registering the {@link JavaTimeModule}.
+ * Configures a Jackson 3.x {@link ObjectMapper} (built via {@link JsonMapper}); Java date/time types
+ * are supported natively by jackson-databind 3.x, so no extra module registration is required.
  */
 @Configuration
 public class JacksonConfig {
@@ -26,8 +27,6 @@ public class JacksonConfig {
      */
     @Bean
     public ObjectMapper objectMapper() {
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule());
-        return objectMapper;
+        return JsonMapper.builder().build();
     }
 }

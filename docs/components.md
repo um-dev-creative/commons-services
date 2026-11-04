@@ -52,20 +52,20 @@ public class ProductController implements CrudService<Long, ProductDto> {
 
 Pre-configured `RestTemplate` with:
 - `BufferingClientHttpRequestFactory` — allows request/response body to be read multiple times (required for logging interceptors)
-- `MappingJackson2HttpMessageConverter` — JSON support limited to `application/json`
+- `JacksonJsonHttpMessageConverter` — JSON support limited to `application/json`
 - Empty interceptor list by default
 
 ### Constructor
 
 ```java
-public ClientRestTemplate(MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter)
+public ClientRestTemplate(JacksonJsonHttpMessageConverter messageConverter)
 ```
 
 ### Protected Fields
 
 | Field | Type | Purpose |
 |---|---|---|
-| `mappingJackson2HttpMessageConverter` | `MappingJackson2HttpMessageConverter` | Jackson converter instance |
+| `messageConverter` | `JacksonJsonHttpMessageConverter` | Jackson converter instance |
 | `restTemplate` | `RestTemplate` | Configured RestTemplate instance |
 
 ### Usage
@@ -74,7 +74,7 @@ public ClientRestTemplate(MappingJackson2HttpMessageConverter mappingJackson2Htt
 @Service
 public class MyApiClient extends ClientRestTemplate {
 
-    public MyApiClient(MappingJackson2HttpMessageConverter converter) {
+    public MyApiClient(JacksonJsonHttpMessageConverter converter) {
         super(converter);
     }
 
@@ -176,7 +176,7 @@ Registers `LogInterceptor` globally for all request paths via `InterceptorRegist
 **File:** `src/main/java/com/prx/commons/services/config/mapper/JacksonConfig.java`  
 **Type:** `@Configuration`
 
-Produces an `ObjectMapper` bean registered with `JavaTimeModule`, enabling serialization/deserialization of Java 8+ date/time types (`LocalDate`, `LocalDateTime`, `ZonedDateTime`, `Instant`, etc.).
+Produces a Jackson 3.x `tools.jackson.databind.ObjectMapper` bean built with `JsonMapper.builder().build()`. Java 8+ date/time types (`LocalDate`, `LocalDateTime`, `ZonedDateTime`, `Instant`, etc.) are supported natively by jackson-databind 3.x, so no `JavaTimeModule` registration is needed.
 
 ---
 

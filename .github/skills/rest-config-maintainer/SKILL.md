@@ -12,7 +12,7 @@ applies-to:
 ### ClientRestTemplate construction
 ```java
 // Always use BufferingClientHttpRequestFactory so request body can be re-read by logging interceptors
-public ClientRestTemplate(MappingJackson2HttpMessageConverter messageConverter) {
+public ClientRestTemplate(JacksonJsonHttpMessageConverter messageConverter) {
     super(new BufferingClientHttpRequestFactory(new SimpleClientHttpRequestFactory()));
     List<HttpMessageConverter<?>> converters = new ArrayList<>();
     converters.add(messageConverter);
@@ -24,9 +24,8 @@ public ClientRestTemplate(MappingJackson2HttpMessageConverter messageConverter) 
 ```java
 @Bean
 public ObjectMapper objectMapper() {
-    ObjectMapper mapper = new ObjectMapper();
-    mapper.registerModule(new JavaTimeModule());
-    return mapper;
+    // Jackson 3.x (tools.jackson): java.time support is built in
+    return JsonMapper.builder().build();
 }
 ```
 
@@ -76,12 +75,12 @@ src/main/java/com/umdc/commons/services/util/PrinterUtil.java
 - NEVER use @Autowired field injection
 - All @Mapper interfaces MUST have config = MapperAppConfig.class
 - RestTemplate MUST use BufferingClientHttpRequestFactory
-- Jackson ObjectMapper MUST have JavaTimeModule registered
+- Jackson 3.x (tools.jackson) ObjectMapper built via JsonMapper; java.time is built in
 - Properties classes MUST have explicit getters/setters
 
 ## 5. Checklist
 - [ ] ClientRestTemplate uses BufferingClientHttpRequestFactory
-- [ ] JacksonConfig registers JavaTimeModule on ObjectMapper
+- [ ] JacksonConfig builds a Jackson 3.x ObjectMapper via JsonMapper
 - [ ] All mappers declare config = MapperAppConfig.class
 - [ ] All properties classes have explicit no-arg constructor and accessors
 - [ ] No Lombok annotations anywhere
